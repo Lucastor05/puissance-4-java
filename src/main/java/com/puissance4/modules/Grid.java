@@ -36,19 +36,31 @@ public class Grid {
     }
 
     public void sout() {
-        String render = "\n";
-        for (int i = 0; i <= Table.length-1; i++) {
-            for (int j = 0; j <= Table[0].length-1; j++) {
+        for (int i = 0; i < 6; i++) { //une boucle avec i qui a pour valeur la taille du tableau, se qui equivaut au ligne
+            for (int j = 0; j < 7; j++) {
+                String sign = "-";
                 if (Objects.equals(Table[i][j], player1.caractere) || Objects.equals(Table[i][j], player2.caractere)) {
-                    render += Table[i][j];
-                } else {
-                    render += "-";
+                    sign = Table[i][j];
+                }
+                if(j==0){
+                    System.out.print("│ "+sign + " │");
+                }else {
+                    System.out.print(" "+sign + " │");
                 }
             }
-            render += "\n";
+            System.out.print("\n");
         }
-        render += "\n";
-        System.out.println(render);
+        System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
+
+
+
+
+
+
+
+
+
+
     }
 
 
