@@ -64,7 +64,7 @@ public class Grid {
     }
 
     public void iaLvl2 () {
-        int rowCount = 1;
+        int rowCount = 0;
         int columnCount = 1;
         int diagonalLeft = 1;
         int diagonalRight = 1;
@@ -74,10 +74,10 @@ public class Grid {
         int tempi = i;
         int tempj = j;
         int mostLeft = tempj;
+        int mostRight = tempj;
 
         String sign = player1.caractere;
 
-        /*System.out.println(tempj);
         //check left / right sides
         while (tempj >= 0) {
             if (Table[i][tempj] == sign) {
@@ -85,100 +85,43 @@ public class Grid {
             }
             tempj -= 1;
         }
-        while (tempj < 6) {
+        tempj = 0;
+        while (tempj < 7) {
+            if (Table[i][tempj] == sign) {
+                mostRight = tempj;
+            }
+            tempj += 1;
+        }
 
+        tempj = mostLeft;
+        int hole = -1;
+        while (rowCount <= 3 && tempj <= mostRight) {
+            if (Objects.equals(Table[i][tempj], sign)) {
+                rowCount++;
+            } else if (tempj<6 && Table[i][tempj] == null && Table[i][tempj+1] == sign) {
+                rowCount++;
+                hole = tempj;
+                tempj++;
+            } else {
+                rowCount = 0;
+            }
             tempj++;
         }
-        System.out.println("most left :"+mostLeft);*/
 
-
-        i = 0;
-        j = 0;
-        int compteur = 0;
-        int valeur_tempo = 0;
-
-        while(compteur != 3 || j < 7){
-            if(Table[i][j] == player1.caractere){
-                compteur +=1;
-                if(compteur == 3){
-                    valeur_tempo = j+1;
+        if (rowCount >= 3) {
+            if (hole > 0) {
+                handleFall(hole);
+                return;
+            } else {
+                if (mostLeft > 0 && Table[i][mostLeft - 1] == null) {
+                    handleFall(mostLeft - 1);
+                    return;
+                } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
+                    handleFall(mostRight + 1);
+                    return;
                 }
-                j+=1;
-            }else if(Table[i][j] == null){
-                valeur_tempo = j;
-                j+=1;
-                while(Table[i][j] == player1.caractere){
-                    compteur += 1;
-                    j+=1;
-                }
-            }else{
-                compteur = 0;
-                j+=1;
             }
         }
-
-        if(compteur >= 3){
-            Table[i][valeur_tempo] = player2.caractere;
-        }
-
-
-        /*
-        while (tempj > 0) {
-            System.out.println(tempj);
-            if (tempj > 1) {
-                System.out.println(Table[i][tempj]);
-                System.out.println(Table[i][tempj - 1]);
-                System.out.println(Table[i][tempj - 2]);
-            }
-            if (tempj > 1 && Table[i][tempj - 1] == null && Table[i][tempj - 1] == player1.caractere && rowCount>=3) {
-                rowCount += 1;
-                tempj -= 2;
-                break;
-            }
-            if (Table[i][tempj - 1] == sign) {
-                rowCount += 1;
-            }
-            tempj -= 1;
-        }
-        tempj = j;
-        while (tempj < 6 && Table[i][tempj+1] == sign) {
-            rowCount += 1;
-            tempj += 1;
-        }*/
-
-        //block left / right sides
-        //System.out.println("rowCount :"+rowCount);
-        /*if (rowCount >= 2) {
-            while (tempj > 0 && Table[i][tempj-1] == sign) {
-                tempj -= 1;
-            }
-            System.out.println(tempj);
-            if (tempj>0) {
-                if (Table[i][tempj - 1] == null && rowCount == 3) {
-                    handleFall(tempj - 1);
-                    return;
-                } else if (tempj >= 2 && rowCount == 2 && Table[i][tempj - 1] == null && Table[i][tempj - 2] == sign) {
-                    handleFall(tempj - 1);
-                    return;
-                }
-            }
-
-            tempj = j;
-            while (tempj < 6 && Table[i][tempj+1] == sign) {
-                rowCount += 1;
-                tempj += 1;
-            }
-            if (tempj<6) {
-                if (Table[i][tempj + 1] == null && rowCount == 3 && tempj >= 1) {
-                    handleFall(tempj + 1);
-                    return;
-                } else if (rowCount == 2 && Table[i][tempj + 1] == null && Table[i][tempj + 2] == sign) {
-                    handleFall(tempj + 1);
-                    return;
-                }
-            }
-        }*/
-
 
         //check down side
         while (tempi < 5 && Table[tempi+1][j] == sign) {
@@ -224,7 +167,7 @@ public class Grid {
             tempj += 1;
         }
 
-        handleFall(0);
+        randomPlace();
     }
 
     public void winCondition (int i, int j) {
