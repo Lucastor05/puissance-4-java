@@ -1,4 +1,4 @@
-package org.example;
+package com.puissance4.main;
 
 import java.util.Random;
 import java.util.Scanner;
