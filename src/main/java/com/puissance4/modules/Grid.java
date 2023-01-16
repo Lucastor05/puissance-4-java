@@ -119,7 +119,9 @@ public class Grid {
 
         if (rowCount >= 4 || columnCount >= 4 || diagonalRight >= 4 || diagonalLeft >= 4) {
             sout();
-            System.out.println("Victoire de "+actualPlayer.pseudo);
+            String ANSI_RESET = "\u001B[0m";
+            String ANSI_GREEN = "\u001B[32m";
+            System.out.println(ANSI_GREEN+"Victoire des "+actualPlayer.pseudo+ANSI_RESET);
             Play = false;
         }
 
