@@ -1,9 +1,8 @@
 package com.puissance4.modules;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import java.util.Scanner;
+
 
 public class Grid {
     static int Players;
@@ -16,27 +15,6 @@ public class Grid {
     static int lasti;
     static int lastj;
 
-
-    public void play() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Nombre de joueurs ? (1 ou 2) :");
-        int numberOfPlayers = sc.nextInt();
-        player1 = new Player("test", "X", "ff");
-        actualPlayer = player1;
-        player2 = new Player("test2", "O", "ff");
-        Players = numberOfPlayers;
-        while (Play) {
-            if (numberOfPlayers == 2 || Round%2 != 0) {
-                sout();
-                System.out.println("Choisissez la colonne sur laquelle vous voulez jouer :");
-                int i = sc.nextInt();
-                handleFall(i-1);
-            } else {
-                iaLvl2();
-                //randomPlace();
-            }
-        }
-    }
 
     public void sout() {
         System.out.println("  1   2   3   4   5   6   7  ");
@@ -56,7 +34,6 @@ public class Grid {
         }
         System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
     }
-
 
     public int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
@@ -264,16 +241,31 @@ public class Grid {
                         return;
                     }
                 } else {
-                    if (mostLeft > 0 && Table[i][mostLeft-1] == null && Table[i+1][mostLeft-1] != null) {
-                        handleFall(mostLeft - 1);
-                        return;
-                    } else if (mostRight < 6 && Table[i][mostRight + 1] == null && Table[i+1][mostRight+1] != null) {
-                        handleFall(mostRight + 1);
-                        return;
+                    if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
+                        if(i!=5){
+                            if(Table[i+1][mostLeft+1] != null){
+                                randomPlace();
+                                return;
+                            }
+                        }else{
+                            handleFall(mostLeft - 1);
+                            return;
+                        }
+                    } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
+                        if(i!=5){
+                            if(Table[i+1][mostRight+1] != null){
+                                randomPlace();
+                                return;
+                            }
+                        }else{
+                            handleFall(mostRight + 1);
+                            return;
+                        }
                     }
                 }
             }
         }
+
 
         //block down side
         while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
@@ -297,7 +289,6 @@ public class Grid {
             returnDiagonal = blockDiagonalLeft(i, j + 1, mostLeft, mostRight);
             if (returnDiagonal) return;
         }
-
         randomPlace();
     }
 
@@ -403,5 +394,50 @@ public class Grid {
             randomX = getRandomNumberUsingNextInt(0, Table[0].length);
         }
         handleFall(randomX);
+    }
+
+
+
+
+
+
+
+
+
+    public static int getPlayers() {
+        return Players;
+    }
+    public static void setPlayers(int players) {
+        Players = players;
+    }
+    public static boolean isPlay() {
+        return Play;
+    }
+    public static void setPlay(boolean play) {
+        Play = play;
+    }
+    public static int getRound() {
+        return Round;
+    }
+    public static void setRound(int round) {
+        Round = round;
+    }
+    public static Player getPlayer1() {
+        return player1;
+    }
+    public static void setPlayer1(Player player1) {
+        Grid.player1 = player1;
+    }
+    public static Player getPlayer2() {
+        return player2;
+    }
+    public static void setPlayer2(Player player2) {
+        Grid.player2 = player2;
+    }
+    public static Player getActualPlayer() {
+        return actualPlayer;
+    }
+    public static void setActualPlayer(Player actualPlayer) {
+        Grid.actualPlayer = actualPlayer;
     }
 }
