@@ -177,7 +177,6 @@ public class Grid {
     public boolean blockRow(int i, int j, int mostLeft, int mostRight) {
         String sign = player1.caractere;
         int tempj = j;
-        int tempi = i;
         int rowCount = 0;
         //block left / right sides
         //get the most left and the most right case on the row
@@ -303,19 +302,19 @@ public class Grid {
         String sign = actualPlayer.caractere;
 
         //check left / right sides
-        while (tempj > 0 && Table[i][tempj-1] == sign) {
+        while (tempj > 0 && Objects.equals(Table[i][tempj - 1], sign)) {
             rowCount += 1;
             tempj -= 1;
         }
         tempj = j;
-        while (tempj < 6 && Table[i][tempj+1] == sign) {
+        while (tempj < 6 && Objects.equals(Table[i][tempj + 1], sign)) {
             rowCount += 1;
             tempj += 1;
         }
 
 
         //check down side
-        while (tempi < 5 && Table[tempi+1][j] == sign) {
+        while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
             columnCount += 1;
             tempi += 1;
         }
@@ -323,14 +322,14 @@ public class Grid {
         //check diagonal right
         tempi = i;
         tempj = j;
-        while (tempi < 5 && tempj > 0 && Table[tempi+1][tempj-1] == sign) {
+        while (tempi < 5 && tempj > 0 && Objects.equals(Table[tempi + 1][tempj - 1], sign)) {
             diagonalRight += 1;
             tempi += 1;
             tempj -= 1;
         }
         tempi = i;
         tempj = j;
-        while (tempi > 0 && tempj < 6 && Table[tempi-1][tempj+1] == sign) {
+        while (tempi > 0 && tempj < 6 && Objects.equals(Table[tempi - 1][tempj + 1], sign)) {
             diagonalRight+= 1;
             tempi -= 1;
             tempj += 1;
@@ -339,14 +338,14 @@ public class Grid {
         //check diagonal left
         tempi = i;
         tempj = j;
-        while (tempi > 0 && tempj > 0 && Table[tempi-1][tempj-1] == sign) {
+        while (tempi > 0 && tempj > 0 && Objects.equals(Table[tempi - 1][tempj - 1], sign)) {
             diagonalLeft += 1;
             tempi -= 1;
             tempj -= 1;
         }
         tempi = i;
         tempj = j;
-        while (tempi < 5 && tempj < 6 && Table[tempi+1][tempj+1] == sign) {
+        while (tempi < 5 && tempj < 6 && Objects.equals(Table[tempi + 1][tempj + 1], sign)) {
             diagonalLeft += 1;
             tempi += 1;
             tempj += 1;
@@ -374,11 +373,11 @@ public class Grid {
         boolean fallen = false;
         int length = 0;
         while (!fallen) {
-            if (Table[0][i] == player1.caractere || Table[0][i] == player2.caractere) {
+            if (Objects.equals(Table[0][i], player1.caractere) || Objects.equals(Table[0][i], player2.caractere)) {
                 System.out.println("Cette colonne est pleine");
                 fallen = true;
             } else {
-                if (length == Table.length-1 || Table[length+1][i] == player1.caractere || Table[length+1][i] == player2.caractere) {
+                if (length == Table.length-1 || Objects.equals(Table[length + 1][i], player1.caractere) || Objects.equals(Table[length + 1][i], player2.caractere)) {
                     Table[length][i] = sign;
                     Round += 1;
                     fallen = true;
@@ -392,7 +391,7 @@ public class Grid {
 
     public void randomPlace () {
         int randomX = getRandomNumberUsingNextInt(0, Table[0].length);
-        while (Table[0][randomX] == player1.caractere || Table[0][randomX] == player2.caractere) {
+        while (Objects.equals(Table[0][randomX], player1.caractere) || Objects.equals(Table[0][randomX], player2.caractere)) {
             randomX = getRandomNumberUsingNextInt(0, Table[0].length);
         }
         handleFall(randomX);
