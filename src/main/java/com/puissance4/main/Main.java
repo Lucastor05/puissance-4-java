@@ -20,7 +20,7 @@ public class Main {
             grid.setPlayer2(new Player("test2", "0", "Z"));
             grid.setPlayers(numberOfPlayers);
         }else{
-            grid.setPlayer2(new Ia("test2", "0", "Z", 2));
+            grid.setPlayer2(new Ia("test2", "0", "Z", 3));
             grid.setPlayers(numberOfPlayers);
         }
 
@@ -39,7 +39,7 @@ public class Main {
                 }else if(player2.getDifficulty()==2){
                     grid.iaLvl2();
                 }else if(player2.getDifficulty()==3){
-                    System.out.println("A venir");
+                    grid.iaLvl3();
                 }else if(player2.getDifficulty()==4){
                     System.out.println("A venir");
                 }
