@@ -358,6 +358,10 @@ public class Grid {
             Play = false;
         }
 
+        changePlayer();
+    }
+
+    public void changePlayer() {
         if (actualPlayer.equals(player1)) {
             actualPlayer = player2;
         } else {
@@ -393,14 +397,6 @@ public class Grid {
         }
         handleFall(randomX);
     }
-
-
-
-
-
-
-
-
 
     public static int getPlayers() {
         return Players;
