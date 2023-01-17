@@ -8,35 +8,19 @@ import java.util.Scanner;
 public class Grid {
     static int Players;
     static String[][] Table = new String[6][7];
+
+
+
     static boolean Play = true;
     static int Round = 1;
+
+
+
     static Player player1;
     static Player player2;
     static Player actualPlayer;
     static int lasti;
     static int lastj;
-
-
-    public void play() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Nombre de joueurs ? (1 ou 2) :");
-        int numberOfPlayers = sc.nextInt();
-        player1 = new Player("test", "X", "ff");
-        actualPlayer = player1;
-        player2 = new Player("test2", "O", "ff");
-        Players = numberOfPlayers;
-        while (Play) {
-            if (numberOfPlayers == 2 || Round%2 != 0) {
-                sout();
-                System.out.println("Choisissez la colonne sur laquelle vous voulez jouer :");
-                int i = sc.nextInt();
-                handleFall(i-1);
-            } else {
-                iaLvl2();
-                //randomPlace();
-            }
-        }
-    }
 
     public void sout() {
         System.out.println("  1   2   3   4   5   6   7  ");
@@ -291,7 +275,9 @@ public class Grid {
 
         if (rowCount >= 4 || columnCount >= 4 || diagonalRight >= 4 || diagonalLeft >= 4) {
             sout();
-            System.out.println("Victoire de "+actualPlayer.pseudo);
+            String ANSI_RESET = "\u001B[0m";
+            String ANSI_GREEN = "\u001B[32m";
+            System.out.println(ANSI_GREEN+"Victoire des "+actualPlayer.pseudo+ANSI_RESET);
             Play = false;
         }
 
@@ -329,5 +315,39 @@ public class Grid {
             randomX = getRandomNumberUsingNextInt(0, Table[0].length);
         }
         handleFall(randomX);
+    }
+
+
+
+
+    public static void setPlayer1(Player player1) {
+        Grid.player1 = player1;
+    }
+
+    public static void setPlayer2(Player player2) {
+        Grid.player2 = player2;
+    }
+
+    public static void setActualPlayer(Player actualPlayer) {
+        Grid.actualPlayer = actualPlayer;
+    }
+
+    public static Player getPlayer1() {
+        return player1;
+    }
+
+    public static Player getPlayer2() {
+        return player2;
+    }
+
+    public static Player getActualPlayer() {
+        return actualPlayer;
+    }
+
+    public static boolean isPlay() {
+        return Play;
+    }
+    public static int getRound() {
+        return Round;
     }
 }
