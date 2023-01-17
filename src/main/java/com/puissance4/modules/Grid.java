@@ -16,7 +16,7 @@ public class Grid {
     static int lastj;
 
 
-    public void sout() {
+    public void printGrid() {
         System.out.println("  1   2   3   4   5   6   7  ");
         for (int i = 0; i < 6; i++) { //une boucle avec i qui a pour valeur la taille du tableau, se qui equivaut au ligne
             for (int j = 0; j < 7; j++) {
@@ -353,7 +353,7 @@ public class Grid {
         }
 
         if (rowCount >= 4 || columnCount >= 4 || diagonalRight >= 4 || diagonalLeft >= 4) {
-            sout();
+            printGrid();
             System.out.println("Victoire de "+actualPlayer.pseudo);
             Play = false;
         }

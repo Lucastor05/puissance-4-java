@@ -1,6 +1,5 @@
 package com.puissance4.main;
 
-import java.util.Random;
 import java.util.Scanner;
 
 import com.puissance4.modules.Grid;
@@ -20,7 +19,7 @@ public class Main {
         grid.setPlayers(numberOfPlayers);
         while (grid.isPlay()) {
             if (numberOfPlayers == 2 || grid.getRound()%2 != 0) {
-                grid.sout();
+                grid.printGrid();
                 System.out.println("Choisissez la colonne sur laquelle vous voulez jouer :");
                 int i = sc.nextInt();
                 grid.handleFall(i-1);
