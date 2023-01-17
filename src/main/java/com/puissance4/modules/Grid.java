@@ -174,26 +174,11 @@ public class Grid {
         return false;
     }
 
-    public void iaLvl2 () {
-        int rowCount = 0;
-        int columnCount = 1;
-        int diagonalLeft = 0;
-        int diagonalRight = 0;
-
-        int i = lasti;
-        int j = lastj;
-
-        int tempi = i;
-        int tempj = j;
-
-        int mostLeft = tempj;
-        int mostRight = tempj;
-
-        int mostTop = tempi;
-        int mostBottom = tempi;
-
+    public boolean blockRow(int i, int j, int mostLeft, int mostRight) {
         String sign = player1.caractere;
-
+        int tempj = j;
+        int tempi = i;
+        int rowCount = 0;
         //block left / right sides
         //get the most left and the most right case on the row
         while (tempj >= 0) {
@@ -230,28 +215,55 @@ public class Grid {
         if (rowCount >= 3) {
             if (hole > 0) {
                 handleFall(hole);
-                return;
+                return true;
             } else {
                 if (i < 5) {
                     if (mostLeft > 0 && Table[i][mostLeft-1] == null && Table[i+1][mostLeft-1] != null) {
                         handleFall(mostLeft - 1);
-                        return;
-                    } else if (mostRight < 6 && Table[i+1][mostRight+1] == null && Table[i+1][mostRight+1] != null) {
+                        return true;
+                    } else if (mostRight < 6 && Table[i][mostRight+1] == null && Table[i+1][mostRight+1] != null) {
                         handleFall(mostRight + 1);
-                        return;
+                        return true;
                     }
                 } else {
                     if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
                         handleFall(mostLeft - 1);
-                        return;
+                        return true;
                     } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
                         handleFall(mostRight + 1);
-                        return;
+                        return true;
                     }
                 }
             }
         }
+        return false;
+    }
 
+    public void iaLvl2 () {
+        int columnCount = 1;
+
+        int i = lasti;
+        int j = lastj;
+
+        int tempi = i;
+        int tempj = j;
+
+        int mostLeft = tempj;
+        int mostRight = tempj;
+
+        String sign = player1.caractere;
+
+        boolean returnRow = blockRow(i,j,mostLeft,mostRight);
+        if (returnRow) return;
+        if (i>0) {
+            if (j>0) {
+                returnRow = blockRow(i-1,j-1,mostLeft,mostRight);
+                if (returnRow) return;
+            } else if (j<6) {
+                returnRow = blockRow(i-1,j+1,mostLeft,mostRight);
+                if (returnRow) return;
+            }
+        }
 
         //block down side
         while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
@@ -272,7 +284,7 @@ public class Grid {
         returnDiagonal = blockDiagonalLeft(i,j,mostLeft,mostRight);
         if (returnDiagonal) return;
         if (j<6) {
-            returnDiagonal = blockDiagonalLeft(i, j + 1, mostLeft, mostRight);
+            returnDiagonal = blockDiagonalLeft(i, j+1, mostLeft, mostRight);
             if (returnDiagonal) return;
         }
         randomPlace();
@@ -327,7 +339,7 @@ public class Grid {
         //check diagonal left
         tempi = i;
         tempj = j;
-        while (tempi > 0 && tempj < 0 && Table[tempi-1][tempj-1] == sign) {
+        while (tempi > 0 && tempj > 0 && Table[tempi-1][tempj-1] == sign) {
             diagonalLeft += 1;
             tempi -= 1;
             tempj -= 1;
