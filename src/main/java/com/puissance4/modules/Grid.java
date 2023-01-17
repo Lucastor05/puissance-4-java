@@ -2,6 +2,8 @@ package com.puissance4.modules;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.Scanner;
+
 
 
 public class Grid {
@@ -12,8 +14,11 @@ public class Grid {
     private Player player1;
     private Player player2;
     private Player actualPlayer;
-    private int lasti;
+    private int lasti = 5;
     private int lastj;
+    private int lastIaI;
+    private int lastIaJ;
+
 
 
     public void printGrid() {
@@ -34,11 +39,13 @@ public class Grid {
         }
         System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
     }
-
     public int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
     }
+
+
+
 
     public boolean blockDiagonalRight(int i, int j, int mostLeft, int mostRight) {
         String sign = player1.caractere;
@@ -106,7 +113,6 @@ public class Grid {
         }
         return false;
     }
-
     public boolean blockDiagonalLeft(int i, int j, int mostLeft, int mostRight) {
         String sign = player1.caractere;
         int diagonalLeft = 0;
@@ -173,9 +179,7 @@ public class Grid {
         }
         return false;
     }
-
-    public boolean blockRow(int i, int j, int mostLeft, int mostRight ) {
-        String sign = player1.caractere;
+    public boolean blockRow(int i, int j, int mostLeft, int mostRight, String sign, int max) {
         int tempj = j;
         int rowCount = 0;
         //block left / right sides
@@ -197,7 +201,7 @@ public class Grid {
         //find the number of case in a row
         tempj = mostLeft;
         int hole = -1;
-        while (rowCount <= 3 && tempj <= mostRight) {
+        while (rowCount <= max && tempj <= mostRight) {
             if (Objects.equals(Table[i][tempj], sign)) {
                 rowCount++;
             } else if (tempj<6 && Table[i][tempj] == null && Objects.equals(Table[i][tempj + 1], sign)) {
@@ -211,7 +215,7 @@ public class Grid {
         }
 
         //block the next move of the user
-        if (rowCount >= 3) {
+        if (rowCount >= max) {
             if (hole > 0) {
                 handleFall(hole);
                 return true;
@@ -238,6 +242,32 @@ public class Grid {
         return false;
     }
 
+    public int isRowEmpty(int i, int j){
+        int rowCount = 0;
+        int tempIaJ = j;
+
+        String signIa = player2.caractere;
+
+
+        while (tempIaJ >= 0 && Table[i][tempIaJ] != player1.caractere) {
+            if (Objects.equals(Table[i][tempIaJ], signIa) || Table[i][tempIaJ] == null) {
+                rowCount++;
+            }
+            tempIaJ -= 1;
+        }
+        tempIaJ = j+1;
+        while (tempIaJ < 6 && Table[i][tempIaJ] != player1.caractere) {
+            if (Objects.equals(Table[i][tempIaJ], signIa) || Table[i][tempIaJ] == null) {
+                rowCount++;
+            }
+            tempIaJ += 1;
+        }
+        System.out.println("full right : "+(rowCount+1)+" / i : "+i+" / j : "+j);
+        return rowCount+1;
+    }
+
+
+
     public void iaLvl2 () {
         int columnCount = 1;
 
@@ -252,14 +282,14 @@ public class Grid {
 
         String sign = player1.caractere;
 
-        boolean returnRow = blockRow(i,j,mostLeft,mostRight);
+        boolean returnRow = blockRow(i,j,mostLeft,mostRight, sign, 3);
         if (returnRow) return;
         if (i>0) {
             if (j>0) {
-                returnRow = blockRow(i-1,j-1,mostLeft,mostRight);
+                returnRow = blockRow(i-1,j-1,mostLeft,mostRight, sign, 3);
                 if (returnRow) return;
             } else if (j<6) {
-                returnRow = blockRow(i-1,j+1,mostLeft,mostRight);
+                returnRow = blockRow(i-1,j+1,mostLeft,mostRight, sign, 3);
                 if (returnRow) return;
             }
         }
@@ -288,10 +318,124 @@ public class Grid {
         }
         randomPlace();
     }
+    public void iaLvl4 () {
+        int columnCount = 1;
+
+
+        //IA variables
+        int IaI = lastIaI;
+        int IaJ = lastIaJ;
+        int tempIaI = IaI;
+        int tempIaJ = IaJ;
+        int mostLeftIA = tempIaJ;
+        int mostRightIA = tempIaJ;
+
+        //players variables
+        int i = lasti;
+        int j = lastj;
+        int tempi = i;
+        int tempj = j;
+        int mostLeft = tempj;
+        int mostRight = tempj;
+
+
+        String signIa = player2.caractere;
+        String sign = player1.caractere;
+
+
+        //IA WIN
+        //Horizontal
+        boolean returnRow = blockRow(IaI,IaJ,mostLeftIA,mostRightIA, signIa, 3);
+        if (returnRow) return;
+        if (IaI>0) {
+            if (IaJ>0) {
+                returnRow = blockRow(IaI-1,IaJ-1,mostLeftIA,mostRightIA, signIa, 3);
+                if (returnRow) return;
+            } else if (IaJ<6) {
+                returnRow = blockRow(IaI-1,IaJ+1,mostLeftIA,mostRightIA, signIa, 3);
+                if (returnRow) return;
+            }
+        }
+
+        //Vertical
+        while (tempIaI < 5 && Objects.equals(Table[tempIaI + 1][IaJ], signIa)) {
+            columnCount += 1;
+            tempIaI += 1;
+        }
+        if (columnCount==3) {
+            handleFall(IaJ);
+            return;
+        }
+
+
+        //Diagonal Droite
+        boolean returnDiagonal = blockDiagonalRight(IaI,IaJ,mostLeftIA,mostRightIA);
+        if (returnDiagonal) return;
+        returnDiagonal = blockDiagonalRight(IaI,IaJ-1,mostLeftIA,mostRightIA);
+        if (returnDiagonal) return;
+
+
+        //Diagonal Gauche
+        returnDiagonal = blockDiagonalLeft(IaI,IaJ,mostLeftIA,mostRightIA);
+        if (returnDiagonal) return;
+        if (IaJ<6) {
+            returnDiagonal = blockDiagonalLeft(IaI, IaJ+1, mostLeftIA, mostRightIA);
+            if (returnDiagonal) return;
+        }
+
+        //IA BLOCK
+
+        columnCount = 1;
+        returnRow = blockRow(i,j,mostLeft,mostRight, sign, 3);
+        if (returnRow) return;
+        if (i>0) {
+            if (j>0) {
+                returnRow = blockRow(i-1,j-1,mostLeft,mostRight, sign, 3);
+                if (returnRow) return;
+            } else if (j<6) {
+                returnRow = blockRow(i-1,j+1,mostLeft,mostRight, sign, 3);
+                if (returnRow) return;
+            }
+        }
+
+        //block down side
+        while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
+            columnCount += 1;
+            tempi += 1;
+        }
+        if (columnCount==3) {
+            handleFall(j);
+            return;
+        }
+
+        returnDiagonal = blockDiagonalRight(i,j,mostLeft,mostRight);
+        if (returnDiagonal) return;
+        returnDiagonal = blockDiagonalRight(i,j-1,mostLeft,mostRight);
+        if (returnDiagonal) return;
+
+
+        returnDiagonal = blockDiagonalLeft(i,j,mostLeft,mostRight);
+        if (returnDiagonal) return;
+        if (j<6) {
+            returnDiagonal = blockDiagonalLeft(i, j+1, mostLeft, mostRight);
+            if (returnDiagonal) return;
+        }
+
+        randomPlace();
+        System.out.println(isRowEmpty(lasti,lastj));
+    }
+
+
+
 
     public void winCondition (int i, int j) {
+        lastIaI = lasti;
+        lastIaJ = lastj;
+
+
         lasti = i;
         lastj = j;
+
         int rowCount = 1;
         int columnCount = 1;
         int diagonalLeft = 1;
@@ -359,7 +503,6 @@ public class Grid {
 
         changePlayer();
     }
-
     public void changePlayer() {
         if (actualPlayer.equals(player1)) {
             actualPlayer = player2;
@@ -367,7 +510,6 @@ public class Grid {
             actualPlayer = player1;
         }
     }
-
     public void handleFall (int i) {
         String sign = actualPlayer.caractere;
         boolean fallen = false;
@@ -388,7 +530,6 @@ public class Grid {
         }
         winCondition(length, i);
     }
-
     public void randomPlace () {
         int randomX = getRandomNumberUsingNextInt(0, Table[0].length);
         while (Objects.equals(Table[0][randomX], player1.caractere) || Objects.equals(Table[0][randomX], player2.caractere)) {
@@ -396,6 +537,7 @@ public class Grid {
         }
         handleFall(randomX);
     }
+
 
     public int getPlayers() {
         return Players;
