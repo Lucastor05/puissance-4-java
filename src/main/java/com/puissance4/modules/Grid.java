@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
+import java.lang.String;
 
 public class Grid {
     static int Players;
@@ -16,64 +17,180 @@ public class Grid {
 
 
     public void play() {
+
+        String caractereOfPlayers1 = "X";
+        String caractereOfPlayers2 = "0";
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Nombre de joueurs ? (1 ou 2) :");
         Integer numberOfPlayers = sc.nextInt();
+
         Scanner p1 = new Scanner(System.in);
         System.out.println("Pseudo du joueur1 :");
         String pseudoOfPlayers1 = p1.nextLine();
+
         Scanner p2 = new Scanner(System.in);
         System.out.println("Pseudo du joueur2 :");
         String pseudoOfPlayers2 = p2.nextLine();
-        Scanner c1 = new Scanner(System.in);
-        System.out.println("Caractere du joueur1 :");
-        String caractereOfPlayers1 = c1.nextLine();
-        Scanner c2 = new Scanner(System.in);
-        System.out.println("Caractere du joueur2 :");
-        String caractereOfPlayers2 = c2.nextLine();
-        Scanner C1 = new Scanner(System.in);
-        System.out.println("Couleur du joueur1 :");
-        String couleurOfPlayers1 = C1.nextLine();
-        Scanner C2 = new Scanner(System.in);
-        System.out.println("Couleur du joueur2 :");
-        String couleurOfPlayers2 = C2.nextLine();
+
+        //Demandes les pseudos
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\n\nVoulez vous personnaliser vos symboles ? \n1-Oui\n2-Non");
+        int choix = scan.nextInt();
 
 
+        if(choix == 1){
+            boolean caraBon = false;
 
-        String cara1 = "X";
-        String cara2 = "O";
+            while(!caraBon){
+                Scanner c1 = new Scanner(System.in);
+                System.out.println("Joueur 1 : Quel symbole voulez-vous ?");
+                caractereOfPlayers1 = c1.nextLine();
 
+                if(caractereOfPlayers1 == "." || caractereOfPlayers1.length() != 1){
+                    System.out.println("\nSymbole non valide! Veuillez réessayer !");
+                    caraBon = false;
+                }else{
+                    caraBon = true;
+                }
 
-        player1 = new Player(pseudoOfPlayers1, caractereOfPlayers1, couleurOfPlayers1);
-        actualPlayer = player1;
-        player2 = new Player(pseudoOfPlayers2, caractereOfPlayers2, couleurOfPlayers2);
-        Players = numberOfPlayers;
-        while (Play) {
-            if (numberOfPlayers == 2 || Round%2 != 0) {
-                sout();
-                System.out.println("Choisissez la colonne sur laquelle vous voulez jouer :");
-                int i = sc.nextInt();
-                handleFall(i-1);
-            } else {
-                randomPlace();
             }
-        }
-    }
 
-    public void sout() {
-        String render = "\n";
-        for (int i = 0; i <= Table.length-1; i++) {
-            for (int j = 0; j <= Table[0].length-1; j++) {
-                if (Objects.equals(Table[i][j], player1.caractere) || Objects.equals(Table[i][j], player2.caractere)) {
-                    render += Table[i][j];
+            caraBon = false;
+
+            while(!caraBon) {
+                while (!caraBon) {
+                    Scanner c2 = new Scanner(System.in);
+                    System.out.println("Joueur 2 : Quel symbole voulez-vous ?");
+                    caractereOfPlayers2 = c2.nextLine();
+
+                    if (caractereOfPlayers2 == "." || caractereOfPlayers2.length() != 1) {
+                        caraBon = false;
+                    } else {
+                        caraBon = true;
+                    }
+
+                }
+
+                if (caractereOfPlayers1.equals(caractereOfPlayers2)) {
+                    System.out.println("\nSymbole non valide! Veuillez réessayer !");
+                    caraBon = false;
                 } else {
-                    render += "-";
+                    caraBon = true;
                 }
             }
-            render += "\n";
         }
-        render += "\n";
-        System.out.println(render);
+
+
+        String couleurOfPlayers1="";
+        String couleurcaractere1="";
+
+        String couleurOfPlayers2="";
+        String couleurcaractere2="";
+
+
+        Scanner scancouleur = new Scanner(System.in);
+        System.out.println("\n\nVoulez vous personnaliser la couleur de vos symboles ? \n1-Oui\n2-Non");
+        int choixcouleur = scancouleur.nextInt();
+            if(choixcouleur == 1) {
+                boolean caracouleur = false;
+
+                while(!caracouleur){
+
+                Scanner C1 = new Scanner(System.in);
+                System.out.println("Couleur du joueur1 :");
+                couleurOfPlayers1 = C1.nextLine();
+
+                    if(couleurOfPlayers1.equals("Bleu")){
+                        couleurcaractere1= "\\u001B[34m";
+                    }
+                    if(couleurOfPlayers1.equals("Jaune")){
+                        couleurcaractere1= "\\u001B[33m";
+                    }
+                    if(couleurOfPlayers1.equals("Violet")){
+                        couleurcaractere1= "\u001B[31m";
+                    }
+                    if(couleurOfPlayers1.equals("Rouge")){
+                        couleurcaractere1= "\\u001B[35m";
+                    }
+                    if (!(couleurOfPlayers1.equals("Rouge")||couleurOfPlayers1.equals("Violet")||couleurOfPlayers1.equals("Jaune")||couleurOfPlayers1.equals("Bleu"))) {
+                        System.out.println("\nCouleur non valide car non reconnues! Veuillez réessayer !");
+                        caracouleur = false;
+                    } else {
+                        caracouleur = true;
+                    }
+                }
+
+                caracouleur=false;
+
+                while(!caracouleur) {
+                    Scanner C2 = new Scanner(System.in);
+                    System.out.println("Couleur du joueur2 :");
+                    couleurOfPlayers2 = C2.nextLine();
+
+                    if (couleurOfPlayers2.equals("Bleu")) {
+                        couleurcaractere2 = "\\u001B[34m";
+                    }
+                    if (couleurOfPlayers2.equals("Jaune")) {
+                        couleurcaractere2 = "\\u001B[33m";
+                    }
+                    if (couleurOfPlayers2.equals("Violet")) {
+                        couleurcaractere2 = "\u001B[31m";
+                    }
+                    if (couleurOfPlayers2.equals("Rouge")) {
+                        couleurcaractere2 = "\\u001B[35m";
+                    }
+                    if (!(couleurOfPlayers1.equals(couleurOfPlayers2) || (couleurOfPlayers1.equals("Rouge") || couleurOfPlayers1.equals("Violet") || couleurOfPlayers1.equals("Jaune") || couleurOfPlayers1.equals("Bleu")))) {
+                        System.out.println("\nCouleur non valide ! Veuillez réessayer !");
+                        caracouleur = false;
+                    } else {
+                        caracouleur = true;
+                    }
+                }
+                player1 = new Player(pseudoOfPlayers1, caractereOfPlayers1, couleurcaractere1);
+                actualPlayer = player1;
+                player2 = new Player(pseudoOfPlayers2, caractereOfPlayers2, couleurcaractere2);
+                Players = numberOfPlayers;
+            }
+            while (Play) {
+                if (numberOfPlayers == 2 || Round%2 != 0) {
+                    sout();
+                    System.out.println("Choisissez la colonne sur laquelle vous voulez jouer :");
+                    int i = sc.nextInt();
+                    handleFall(i-1);
+                } else {
+                    randomPlace();
+                }
+            }
+        }
+
+    public void sout() {
+        System.out.println("  1   2   3   4   5   6   7  ");
+        for (int i = 0; i < 6; i++) { //une boucle avec i qui a pour valeur la taille du tableau, se qui equivaut au ligne
+            for (int j = 0; j < 7; j++) {
+                String sign = "-";
+                if (Objects.equals(Table[i][j], player1.caractere) || Objects.equals(Table[i][j], player2.caractere)) {
+                    sign = Table[i][j];
+                }
+                if(j==0){
+                    System.out.print("│ "+sign + " │");
+                }else {
+                    System.out.print(" "+sign + " │");
+                }
+            }
+            System.out.print("\n");
+        }
+        System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
+
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -158,7 +275,9 @@ public class Grid {
     }
 
     public void handleFall (int i) {
+        String ANSI_RESET = "\u001B[0m";
         String sign = actualPlayer.caractere;
+        String ANSI_PLAYER = actualPlayer.couleur;;
         boolean fallen = false;
         int length = 0;
         while (!fallen) {
@@ -167,7 +286,7 @@ public class Grid {
                 fallen = true;
             } else {
                 if (length == Table.length-1 || Table[length+1][i] == player1.caractere || Table[length+1][i] == player2.caractere) {
-                    Table[length][i] = sign;
+                    Table[length][i] = (ANSI_PLAYER+sign+ANSI_RESET);
                     Round += 1;
                     fallen = true;
                 } else {
