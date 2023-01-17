@@ -70,7 +70,6 @@ public class Grid {
         int tempi = i;
         int mostTop = tempi;
         int mostBottom = tempi;
-        System.out.println("before : " + tempi + "," + tempj);
         while (tempi <= 5 && tempj >= 0) {
             if (Objects.equals(Table[tempi][tempj], sign)) {
                 mostLeft = tempj;
@@ -89,8 +88,6 @@ public class Grid {
             tempi -= 1;
             tempj += 1;
         }
-        System.out.println("most bottom left :" + mostBottom + ", " + mostLeft);
-        System.out.println("most top right :" + mostTop + ", " + mostRight);
 
         tempj = mostLeft;
         tempi = mostBottom;
@@ -111,20 +108,88 @@ public class Grid {
             tempi--;
             tempj++;
         }
-        System.out.println("diag : " + diagonalRight);
-        System.out.println("hole :" + holei + "," + holej);
-        System.out.println("next move :" + tempi + "," + tempj);
 
         if (diagonalRight >= 3) {
-            if (holei > 0 && holej > 0 && Table[holei - 1][holej] != null) {
+            if (holei > 0 && holej > 0 && Table[holei+1][holej] != null) {
                 handleFall(holej);
                 return true;
             } else {
-                if (mostLeft > 0 && mostBottom < 5 && Table[mostBottom + 1][mostLeft - 1] == null) {
+                if (mostLeft > 0 && mostBottom == 4 && Table[mostBottom+1][mostLeft-1] == null) {
                     handleFall(mostLeft - 1);
                     return true;
-                } else if (mostRight < 6 && mostTop > 0 && Table[mostTop - 1][mostRight + 1] == null) {
+                } else if (mostLeft > 0 && mostBottom < 4 && Table[mostBottom+1][mostLeft-1] == null && Table[mostBottom+2][mostLeft-1] != null) {
+                    handleFall(mostLeft - 1);
+                    return true;
+                }
+                else if (mostRight < 6 && mostTop > 0 && Table[mostTop-1][mostRight+1] == null && Table[mostTop][mostRight+1] != null) {
                     handleFall(mostRight + 1);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean blockDiagonalLeft(int i, int j, int mostLeft, int mostRight) {
+        String sign = player1.caractere;
+        int diagonalLeft = 0;
+        int tempj = j;
+        int tempi = i;
+        int mostTop = tempi;
+        int mostBottom = tempi;
+        while (tempi >= 0 && tempj >= 0) {
+            if (Objects.equals(Table[tempi][tempj], sign)) {
+                mostLeft = tempj;
+                mostTop = tempi;
+            }
+            tempi -= 1;
+            tempj -= 1;
+        }
+        tempi = mostTop;
+        tempj = mostLeft;
+        while (tempi <= 5 && tempj <= 6) {
+            if (Objects.equals(Table[tempi][tempj], sign)) {
+                mostRight = tempj;
+                mostBottom = tempi;
+            }
+            tempi += 1;
+            tempj += 1;
+        }
+
+        tempj = mostRight;
+        tempi = mostBottom;
+        int holej = -1;
+        int holei = -1;
+        while (diagonalLeft <= 3 && tempj >= mostLeft && tempi >= mostTop) {
+            if (Objects.equals(Table[tempi][tempj], sign)) {
+                diagonalLeft++;
+            } else if (tempj >0 && tempi > 0 && Table[tempi][tempj] == null && Objects.equals(Table[tempi - 1][tempj - 1], sign)) {
+                diagonalLeft++;
+                holej = tempj;
+                holei = tempi;
+                tempi--;
+                tempj--;
+            } else {
+                diagonalLeft = 0;
+            }
+            tempi--;
+            tempj--;
+        }
+
+        if (diagonalLeft >= 3) {
+            if (holei > 0 && Table[holei+1][holej+1] != null) {
+                handleFall(holej);
+                return true;
+            } else {
+                if (mostRight < 6 && mostBottom == 4 && Table[mostBottom+1][mostRight+1] == null) {
+                    handleFall(mostRight + 1);
+                    return true;
+                } else if (mostRight < 6 && mostBottom < 4 && Table[mostBottom+1][mostRight+1] == null && Table[mostBottom+2][mostRight+1] != null) {
+                    handleFall(mostRight + 1);
+                    return true;
+                }
+                else if (mostLeft > 0 && mostTop > 0 && Table[mostTop-1][mostLeft-1] == null && Table[mostTop][mostLeft-1] != null) {
+                    handleFall(mostLeft - 1);
                     return true;
                 }
             }
@@ -185,25 +250,33 @@ public class Grid {
         }
 
         //block the next move of the user
-        /*
         if (rowCount >= 3) {
             if (hole > 0) {
                 handleFall(hole);
                 return;
             } else {
-                if (mostLeft > 0 && Table[i][mostLeft - 1] == null) {
-                    handleFall(mostLeft - 1);
-                    return;
-                } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
-                    handleFall(mostRight + 1);
-                    return;
+                if (i == 0) {
+                    if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
+                        handleFall(mostLeft - 1);
+                        return;
+                    } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
+                        handleFall(mostRight + 1);
+                        return;
+                    }
+                } else {
+                    if (mostLeft > 0 && Table[i][mostLeft-1] == null && Table[i+1][mostLeft-1] != null) {
+                        handleFall(mostLeft - 1);
+                        return;
+                    } else if (mostRight < 6 && Table[i][mostRight + 1] == null && Table[i+1][mostRight+1] != null) {
+                        handleFall(mostRight + 1);
+                        return;
+                    }
                 }
             }
         }
-*/
 
         //block down side
-        /*while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
+        while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
             columnCount += 1;
             tempi += 1;
         }
@@ -214,25 +287,15 @@ public class Grid {
 
         boolean returnDiagonal = blockDiagonalRight(i,j,mostLeft,mostRight);
         if (returnDiagonal) return;
-        tempi = i;
-        tempj = j;
         returnDiagonal = blockDiagonalRight(i,j-1,mostLeft,mostRight);
-        if (returnDiagonal) return;*/
+        if (returnDiagonal) return;
 
-        //check diagonal left
-        tempi = i;
-        tempj = j;
-        while (tempi > 0 && tempj > 0 && Table[tempi-1][tempj-1] == sign) {
-            diagonalLeft += 1;
-            tempi -= 1;
-            tempj -= 1;
-        }
-        tempi = i;
-        tempj = j;
-        while (tempi < 5 && tempj < 6 && Table[tempi+1][tempj+1] == sign) {
-            diagonalLeft += 1;
-            tempi += 1;
-            tempj += 1;
+
+        returnDiagonal = blockDiagonalLeft(i,j,mostLeft,mostRight);
+        if (returnDiagonal) return;
+        if (j<6) {
+            returnDiagonal = blockDiagonalLeft(i, j + 1, mostLeft, mostRight);
+            if (returnDiagonal) return;
         }
 
         randomPlace();
