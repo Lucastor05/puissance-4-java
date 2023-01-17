@@ -34,13 +34,13 @@ public class Main {
                 grid.handleFall(i-1);
             } else {
                 Ia player2 = (Ia)grid.getPlayer2();
-                if(player2.getDifficulty()==2){
-                    grid.iaLvl2();
-                }else if(player2.getDifficulty()==1){
+                if(player2.getDifficulty()==1){
                     grid.randomPlace();
                 }else if(player2.getDifficulty()==2){
-                    System.out.println("A venir");
+                    grid.iaLvl2();
                 }else if(player2.getDifficulty()==3){
+                    System.out.println("A venir");
+                }else if(player2.getDifficulty()==4){
                     System.out.println("A venir");
                 }
                 //randomPlace();
