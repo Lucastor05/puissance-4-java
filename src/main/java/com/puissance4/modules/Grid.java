@@ -232,35 +232,21 @@ public class Grid {
                 handleFall(hole);
                 return;
             } else {
-                if (i == 0) {
+                if (i < 5) {
+                    if (mostLeft > 0 && Table[i][mostLeft-1] == null && Table[i+1][mostLeft-1] != null) {
+                        handleFall(mostLeft - 1);
+                        return;
+                    } else if (mostRight < 6 && Table[i+1][mostRight+1] == null && Table[i+1][mostRight+1] != null) {
+                        handleFall(mostRight + 1);
+                        return;
+                    }
+                } else {
                     if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
                         handleFall(mostLeft - 1);
                         return;
                     } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
                         handleFall(mostRight + 1);
                         return;
-                    }
-                } else {
-                    if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
-                        if(i!=5){
-                            if(Table[i+1][mostLeft+1] != null){
-                                randomPlace();
-                                return;
-                            }
-                        }else{
-                            handleFall(mostLeft - 1);
-                            return;
-                        }
-                    } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
-                        if(i!=5){
-                            if(Table[i+1][mostRight+1] != null){
-                                randomPlace();
-                                return;
-                            }
-                        }else{
-                            handleFall(mostRight + 1);
-                            return;
-                        }
                     }
                 }
             }
