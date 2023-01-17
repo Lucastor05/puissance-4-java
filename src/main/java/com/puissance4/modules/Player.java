@@ -1,9 +1,9 @@
 package com.puissance4.modules;
 
 public class Player {
-    String pseudo;
-    String caractere;
-    String couleur;
+    protected String pseudo;
+    protected String caractere;
+    protected String couleur;
 
     public Player(String pseudo, String caractere, String couleur) {
         //constructor

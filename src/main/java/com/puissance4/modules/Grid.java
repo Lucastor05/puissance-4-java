@@ -5,15 +5,15 @@ import java.util.Random;
 
 
 public class Grid {
-    static int Players;
-    static String[][] Table = new String[6][7];
-    static boolean Play = true;
-    static int Round = 1;
-    static Player player1;
-    static Player player2;
-    static Player actualPlayer;
-    static int lasti;
-    static int lastj;
+    private int Players;
+    private String[][] Table = new String[6][7];
+    private boolean Play = true;
+    private int Round = 1;
+    private Player player1;
+    private Player player2;
+    private Player actualPlayer;
+    private int lasti;
+    private int lastj;
 
 
     public void printGrid() {
@@ -174,7 +174,7 @@ public class Grid {
         return false;
     }
 
-    public boolean blockRow(int i, int j, int mostLeft, int mostRight) {
+    public boolean blockRow(int i, int j, int mostLeft, int mostRight ) {
         String sign = player1.caractere;
         int tempj = j;
         int rowCount = 0;
@@ -397,40 +397,40 @@ public class Grid {
         handleFall(randomX);
     }
 
-    public static int getPlayers() {
+    public int getPlayers() {
         return Players;
     }
-    public static void setPlayers(int players) {
+    public void setPlayers(int players) {
         Players = players;
     }
-    public static boolean isPlay() {
+    public boolean isPlay() {
         return Play;
     }
-    public static void setPlay(boolean play) {
+    public void setPlay(boolean play) {
         Play = play;
     }
-    public static int getRound() {
+    public int getRound() {
         return Round;
     }
-    public static void setRound(int round) {
+    public void setRound(int round) {
         Round = round;
     }
-    public static Player getPlayer1() {
+    public Player getPlayer1() {
         return player1;
     }
-    public static void setPlayer1(Player player1) {
-        Grid.player1 = player1;
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
     }
-    public static Player getPlayer2() {
+    public Player getPlayer2() {
         return player2;
     }
-    public static void setPlayer2(Player player2) {
-        Grid.player2 = player2;
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
     }
-    public static Player getActualPlayer() {
+    public Player getActualPlayer() {
         return actualPlayer;
     }
-    public static void setActualPlayer(Player actualPlayer) {
-        Grid.actualPlayer = actualPlayer;
+    public void setActualPlayer(Player actualPlayer) {
+        this.actualPlayer = actualPlayer;
     }
 }
