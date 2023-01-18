@@ -13,14 +13,14 @@ public class Main {
         System.out.println("Nombre de joueurs ? (1 ou 2) :");
         int numberOfPlayers = sc.nextInt();
 
-        grid.setPlayer1(new Player("test", "X", "ff"));
+        grid.setPlayer1(new Player("Player_1", "X", "ff"));
         grid.setActualPlayer(grid.getPlayer1());
 
         if(numberOfPlayers == 2){
-            grid.setPlayer2(new Player("test2", "0", "Z"));
+            grid.setPlayer2(new Player("Player_2", "0", "green"));
             grid.setPlayers(numberOfPlayers);
         }else{
-            grid.setPlayer2(new Ia("test2", "0", "Z", 3));
+            grid.setPlayer2(new Ia("BOT", "0", "red", 4));
             grid.setPlayers(numberOfPlayers);
         }
 
@@ -41,9 +41,8 @@ public class Main {
                 }else if(player2.getDifficulty()==3){
                     grid.iaLvl3();
                 }else if(player2.getDifficulty()==4){
-                    System.out.println("A venir");
+                    grid.iaLvl4();
                 }
-                //randomPlace();
             }
         }
     }

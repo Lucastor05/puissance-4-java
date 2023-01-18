@@ -1,6 +1,10 @@
 package com.puissance4.modules;
 
 import java.util.*;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Scanner;
+
 
 
 public class Grid {
@@ -11,8 +15,12 @@ public class Grid {
     private Player player1;
     private Player player2;
     private Player actualPlayer;
-    private int lasti;
+    private int lasti = 5;
     private int lastj;
+    private int lastIaI;
+    private int lastIaJ;
+
+
     private List<Integer> forbiddenCases = new ArrayList<Integer>();
 
     public void printGrid() {
@@ -33,7 +41,6 @@ public class Grid {
         }
         System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
     }
-
     public int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
@@ -206,8 +213,7 @@ public class Grid {
         return false;
     }
 
-    public boolean blockRow(int i, int j, int mostLeft, int mostRight, boolean shouldIplay) {
-        String sign = player1.caractere;
+    public boolean blockRow(int i, int j, int mostLeft, int mostRight, boolean shouldIplay, String sign, int max) {
         int tempj = j;
         int rowCount = 0;
         //block left / right sides
@@ -229,7 +235,7 @@ public class Grid {
         //find the number of case in a row
         tempj = mostLeft;
         int hole = -1;
-        while (rowCount <= 3 && tempj <= mostRight) {
+        while (rowCount <= max && tempj <= mostRight) {
             if (Objects.equals(Table[i][tempj], sign)) {
                 rowCount++;
             } else if (tempj<6 && Table[i][tempj] == null && Objects.equals(Table[i][tempj + 1], sign)) {
@@ -243,7 +249,7 @@ public class Grid {
         }
 
         //block the next move of the user
-        if (rowCount >= 3) {
+        if (rowCount >= max) {
             if (!shouldIplay) {
                 if (mostRight < j) {
                     return false;
@@ -308,14 +314,14 @@ public class Grid {
 
         String sign = player1.caractere;
 
-        boolean returnRow = blockRow(i,j,mostLeft,mostRight, true);
+        boolean returnRow = blockRow(i,j,mostLeft,mostRight, true, sign, 3);
         if (returnRow) return;
         if (i>0) {
             if (j>0) {
-                returnRow = blockRow(i-1,j-1,mostLeft,mostRight, true);
+                returnRow = blockRow(i,j,mostLeft,mostRight, true, sign, 3);
                 if (returnRow) return;
             } else if (j<6) {
-                returnRow = blockRow(i-1,j+1,mostLeft,mostRight, true);
+                returnRow = blockRow(i,j,mostLeft,mostRight, true, sign, 3);
                 if (returnRow) return;
             }
         }
@@ -344,6 +350,73 @@ public class Grid {
         }
         randomPlace();
     }
+    public void iaLvl4 () {
+        int columnCount = 1;
+
+
+        //IA variables
+        int IaI = lastIaI;
+        int IaJ = lastIaJ;
+        int tempIaI = IaI;
+        int tempIaJ = IaJ;
+        int mostLeftIA = tempIaJ;
+        int mostRightIA = tempIaJ;
+
+        //players variables
+        int i = lasti;
+        int j = lastj;
+        int tempj = j;
+
+
+
+        String signIa = player2.caractere;
+
+
+        //IA WIN
+        //Horizontal
+        boolean returnRow = blockRow(IaI,IaJ,mostLeftIA,mostRightIA, true, signIa, 3);
+        if (returnRow) return;
+        if (IaI>0) {
+            if (IaJ>0) {
+                returnRow = blockRow(IaI-1,IaJ-1,mostLeftIA,mostRightIA, true, signIa, 3);
+                if (returnRow) return;
+            } else if (IaJ<6) {
+                returnRow = blockRow(IaI-1,IaJ+1,mostLeftIA,mostRightIA, true, signIa, 3);
+                if (returnRow) return;
+            }
+        }
+
+        //Vertical
+        while (tempIaI < 5 && Objects.equals(Table[tempIaI + 1][IaJ], signIa)) {
+            columnCount += 1;
+            tempIaI += 1;
+        }
+        if (columnCount==3) {
+            handleFall(IaJ);
+            return;
+        }
+
+
+        //Diagonal Droite
+        boolean returnDiagonal = blockDiagonalRight(IaI,IaJ,mostLeftIA,mostRightIA,true);
+        if (returnDiagonal) return;
+        returnDiagonal = blockDiagonalRight(IaI,IaJ-1,mostLeftIA,mostRightIA,true);
+        if (returnDiagonal) return;
+
+
+        //Diagonal Gauche
+        returnDiagonal = blockDiagonalLeft(IaI,IaJ,mostLeftIA,mostRightIA,true);
+        if (returnDiagonal) return;
+        if (IaJ<6) {
+            returnDiagonal = blockDiagonalLeft(IaI, IaJ+1, mostLeftIA, mostRightIA,true);
+            if (returnDiagonal) return;
+        }
+
+        iaLvl3();
+    }
+
+
+
 
     public void iaLvl3() {
         for (int j = 0; j<Table[0].length; j++) {
@@ -357,7 +430,7 @@ public class Grid {
             boolean canPlayerWin = false;
             if (mostBottom > 1) {
                 if (j>0) {
-                    canPlayerWin = blockRow(mostBottom-2, j-1, 0, 0, false);
+                    canPlayerWin = blockRow(mostBottom-2, j-1, 0, 0, false, player1.caractere, 3);
                     if (canPlayerWin && !forbiddenCases.contains(j)) {
                         forbiddenCases.add(j);
                     }
@@ -367,7 +440,7 @@ public class Grid {
                     }
                 }
                 if (j<6) {
-                    canPlayerWin = blockRow(mostBottom-2, j+1, 0, 0, false);
+                    canPlayerWin = blockRow(mostBottom-2, j+1, 0, 0, false, player1.caractere, 3);
                     if (canPlayerWin && !forbiddenCases.contains(j)) {
                         forbiddenCases.add(j);
                     }
@@ -382,8 +455,12 @@ public class Grid {
     }
 
     public void winCondition (int i, int j) {
+        lastIaI = lasti;
+        lastIaJ = lastj;
+
         lasti = i;
         lastj = j;
+
         int rowCount = 1;
         int columnCount = 1;
         int diagonalLeft = 1;
@@ -526,6 +603,7 @@ public class Grid {
             handleFall(randomX);
         }
     }
+
 
     public int getPlayers() {
         return Players;
