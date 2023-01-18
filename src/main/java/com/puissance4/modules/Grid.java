@@ -333,14 +333,11 @@ public class Grid {
         //players variables
         int i = lasti;
         int j = lastj;
-        int tempi = i;
         int tempj = j;
-        int mostLeft = tempj;
-        int mostRight = tempj;
+
 
 
         String signIa = player2.caractere;
-        String sign = player1.caractere;
 
 
         //IA WIN
@@ -383,46 +380,7 @@ public class Grid {
             if (returnDiagonal) return;
         }
 
-        //IA BLOCK
-
-        columnCount = 1;
-        returnRow = blockRow(i,j,mostLeft,mostRight, sign, 3);
-        if (returnRow) return;
-        if (i>0) {
-            if (j>0) {
-                returnRow = blockRow(i-1,j-1,mostLeft,mostRight, sign, 3);
-                if (returnRow) return;
-            } else if (j<6) {
-                returnRow = blockRow(i-1,j+1,mostLeft,mostRight, sign, 3);
-                if (returnRow) return;
-            }
-        }
-
-        //block down side
-        while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
-            columnCount += 1;
-            tempi += 1;
-        }
-        if (columnCount==3) {
-            handleFall(j);
-            return;
-        }
-
-        returnDiagonal = blockDiagonalRight(i,j,mostLeft,mostRight);
-        if (returnDiagonal) return;
-        returnDiagonal = blockDiagonalRight(i,j-1,mostLeft,mostRight);
-        if (returnDiagonal) return;
-
-
-        returnDiagonal = blockDiagonalLeft(i,j,mostLeft,mostRight);
-        if (returnDiagonal) return;
-        if (j<6) {
-            returnDiagonal = blockDiagonalLeft(i, j+1, mostLeft, mostRight);
-            if (returnDiagonal) return;
-        }
-
-        randomPlace();
-        System.out.println(isRowEmpty(lasti,lastj));
+        iaLvl2();
     }
 
 
@@ -512,14 +470,18 @@ public class Grid {
     }
     public void handleFall (int i) {
         String sign = actualPlayer.caractere;
+        Scanner sc = new Scanner(System.in);
         boolean fallen = false;
         int length = 0;
         while (!fallen) {
-            if (Objects.equals(Table[0][i], player1.caractere) || Objects.equals(Table[0][i], player2.caractere)) {
+            if (player1.caractere.equals(Table[0][i]) || player2.caractere.equals(Table[0][i])) {
                 System.out.println("Cette colonne est pleine");
-                fallen = true;
+
+                System.out.println("Entré une nouvelle colonne : ");
+                i = sc.nextInt()-1;
+
             } else {
-                if (length == Table.length-1 || Objects.equals(Table[length + 1][i], player1.caractere) || Objects.equals(Table[length + 1][i], player2.caractere)) {
+                if (length == Table.length-1 || player1.caractere.equals(Table[length + 1][i]) || player2.caractere.equals(Table[length + 1][i])) {
                     Table[length][i] = sign;
                     Round += 1;
                     fallen = true;
