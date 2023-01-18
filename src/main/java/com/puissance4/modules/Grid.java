@@ -1,9 +1,6 @@
 package com.puissance4.modules;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 
 public class Grid {
@@ -42,7 +39,33 @@ public class Grid {
         return random.nextInt(max - min) + min;
     }
 
-    public boolean blockDiagonalRight(int i, int j, int mostLeft, int mostRight) {
+    public boolean checkDiagonal(int mostRight, int mostLeft, int j, int i, int holej, int holei) {
+        if (mostRight < j) {
+            return false;
+        }
+        if (mostLeft > j) {
+            return false;
+        }
+        if (holei > 0) {
+            if (holei != i-1 && holei != i+1 && holej != j-1 && holej != j+1) {
+                return false;
+            } else {
+                if (holei<4 && Table[holei+2][holej] == null) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
+            return true;
+        } else if (mostRight < 6 && Table[i][mostRight+1] == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean blockDiagonalRight(int i, int j, int mostLeft, int mostRight, boolean shouldIplay) {
         String sign = player1.caractere;
         int diagonalRight = 0;
         int tempj = j;
@@ -89,20 +112,23 @@ public class Grid {
         }
 
         if (diagonalRight >= 3) {
-            if (holei > 0 && holej > 0 && Table[holei+1][holej] != null) {
-                handleFall(holej);
-                return true;
+            if (!shouldIplay) {
+                return checkDiagonal(mostRight, mostLeft, j, i, holej, holei);
             } else {
-                if (mostLeft > 0 && mostBottom == 4 && Table[mostBottom+1][mostLeft-1] == null) {
-                    handleFall(mostLeft - 1);
+                if (holei > 0 && holej > 0 && Table[holei + 1][holej] != null) {
+                    handleFall(holej);
                     return true;
-                } else if (mostLeft > 0 && mostBottom < 4 && Table[mostBottom+1][mostLeft-1] == null && Table[mostBottom+2][mostLeft-1] != null) {
-                    handleFall(mostLeft - 1);
-                    return true;
-                }
-                else if (mostRight < 6 && mostTop > 0 && Table[mostTop-1][mostRight+1] == null && Table[mostTop][mostRight+1] != null) {
-                    handleFall(mostRight + 1);
-                    return true;
+                } else {
+                    if (mostLeft > 0 && mostBottom == 4 && Table[mostBottom + 1][mostLeft - 1] == null) {
+                        handleFall(mostLeft - 1);
+                        return true;
+                    } else if (mostLeft > 0 && mostBottom < 4 && Table[mostBottom + 1][mostLeft - 1] == null && Table[mostBottom + 2][mostLeft - 1] != null) {
+                        handleFall(mostLeft - 1);
+                        return true;
+                    } else if (mostRight < 6 && mostTop > 0 && Table[mostTop - 1][mostRight + 1] == null && Table[mostTop][mostRight + 1] != null) {
+                        handleFall(mostRight + 1);
+                        return true;
+                    }
                 }
             }
         }
@@ -157,25 +183,7 @@ public class Grid {
 
         if (diagonalLeft >= 3) {
             if (!shouldIplay) {
-                System.out.println("must not play");
-                if (mostRight < j) {
-                    return false;
-                }
-                if (mostLeft > j) {
-                    return false;
-                }
-                if (holei > 0) {
-                    if (holei != i-1 && holei != i+1 && holej != j-1 && holej != j+1) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-                if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
-                    return true;
-                } else if (mostRight < 6 && Table[i][mostRight+1] == null) {
-                    return true;
-                }
+                return checkDiagonal(mostRight, mostLeft, j, i, holej, holei);
             } else {
                 if (holei > 0 && Table[holei+1][holej] != null) {
                     handleFall(holej);
@@ -322,9 +330,9 @@ public class Grid {
             return;
         }
 
-        boolean returnDiagonal = blockDiagonalRight(i,j,mostLeft,mostRight);
+        boolean returnDiagonal = blockDiagonalRight(i,j,mostLeft,mostRight, true);
         if (returnDiagonal) return;
-        returnDiagonal = blockDiagonalRight(i,j-1,mostLeft,mostRight);
+        returnDiagonal = blockDiagonalRight(i,j-1,mostLeft,mostRight, true);
         if (returnDiagonal) return;
 
 
@@ -350,6 +358,10 @@ public class Grid {
             if (mostBottom > 1) {
                 if (j>0) {
                     canPlayerWin = blockRow(mostBottom-2, j-1, 0, 0, false);
+                    if (canPlayerWin && !forbiddenCases.contains(j)) {
+                        forbiddenCases.add(j);
+                    }
+                    canPlayerWin = blockDiagonalRight(mostBottom-1, j-1, 0, 0, false);
                     if (canPlayerWin && !forbiddenCases.contains(j)) {
                         forbiddenCases.add(j);
                     }
@@ -473,14 +485,17 @@ public class Grid {
         String sign = actualPlayer.caractere;
         boolean fallen = false;
         int length = 0;
+        Scanner sc = new Scanner(System.in);
         removeForbiddenCase(i);
-        System.out.println(forbiddenCases);
         while (!fallen) {
-            if (Objects.equals(Table[0][i], player1.caractere) || Objects.equals(Table[0][i], player2.caractere)) {
+            if (player1.caractere.equals(Table[0][i]) || player2.caractere.equals(Table[0][i])) {
                 System.out.println("Cette colonne est pleine");
-                fallen = true;
+
+                System.out.println("Entré une nouvelle colonne : ");
+                i = sc.nextInt()-1;
+
             } else {
-                if (length == Table.length-1 || Objects.equals(Table[length + 1][i], player1.caractere) || Objects.equals(Table[length + 1][i], player2.caractere)) {
+                if (length == Table.length-1 || player1.caractere.equals(Table[length + 1][i]) || player2.caractere.equals(Table[length + 1][i])) {
                     Table[length][i] = sign;
                     Round += 1;
                     fallen = true;
