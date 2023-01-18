@@ -241,33 +241,6 @@ public class Grid {
         }
         return false;
     }
-
-    public int isRowEmpty(int i, int j){
-        int rowCount = 0;
-        int tempIaJ = j;
-
-        String signIa = player2.caractere;
-
-
-        while (tempIaJ >= 0 && Table[i][tempIaJ] != player1.caractere) {
-            if (Objects.equals(Table[i][tempIaJ], signIa) || Table[i][tempIaJ] == null) {
-                rowCount++;
-            }
-            tempIaJ -= 1;
-        }
-        tempIaJ = j+1;
-        while (tempIaJ < 6 && Table[i][tempIaJ] != player1.caractere) {
-            if (Objects.equals(Table[i][tempIaJ], signIa) || Table[i][tempIaJ] == null) {
-                rowCount++;
-            }
-            tempIaJ += 1;
-        }
-        System.out.println("full right : "+(rowCount+1)+" / i : "+i+" / j : "+j);
-        return rowCount+1;
-    }
-
-
-
     public void iaLvl2 () {
         int columnCount = 1;
 

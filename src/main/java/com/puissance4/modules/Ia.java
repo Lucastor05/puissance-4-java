@@ -6,9 +6,6 @@ public class Ia extends Player{
         super(pseudo, caractere, couleur);
         this.difficulty = difficulty;
     }
-
-
-
     public  int getDifficulty() {
         return difficulty;
     }
