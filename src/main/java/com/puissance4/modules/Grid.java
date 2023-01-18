@@ -16,8 +16,7 @@ public class Grid {
     private Player actualPlayer;
     private int lasti;
     private int lastj;
-
-    List<Integer> forbiddenCases = new ArrayList<Integer>();
+    private List<Integer> forbiddenCases = new ArrayList<Integer>();
 
     public void printGrid() {
         System.out.println("  1   2   3   4   5   6   7  ");
@@ -110,7 +109,7 @@ public class Grid {
         return false;
     }
 
-    public boolean blockDiagonalLeft(int i, int j, int mostLeft, int mostRight) {
+    public boolean blockDiagonalLeft(int i, int j, int mostLeft, int mostRight, boolean shouldIplay) {
         String sign = player1.caractere;
         int diagonalLeft = 0;
         int tempj = j;
@@ -157,20 +156,42 @@ public class Grid {
         }
 
         if (diagonalLeft >= 3) {
-            if (holei > 0 && Table[holei+1][holej] != null) {
-                handleFall(holej);
-                return true;
-            } else {
-                if (mostRight < 6 && mostBottom == 4 && Table[mostBottom+1][mostRight+1] == null) {
-                    handleFall(mostRight + 1);
+            if (!shouldIplay) {
+                System.out.println("must not play");
+                if (mostRight < j) {
+                    return false;
+                }
+                if (mostLeft > j) {
+                    return false;
+                }
+                if (holei > 0) {
+                    if (holei != i-1 && holei != i+1 && holej != j-1 && holej != j+1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                if (mostLeft > 0 && Table[i][mostLeft-1] == null) {
                     return true;
-                } else if (mostRight < 6 && mostBottom < 4 && Table[mostBottom+1][mostRight+1] == null && Table[mostBottom+2][mostRight+1] != null) {
-                    handleFall(mostRight + 1);
+                } else if (mostRight < 6 && Table[i][mostRight+1] == null) {
                     return true;
                 }
-                else if (mostLeft > 0 && mostTop > 0 && Table[mostTop-1][mostLeft-1] == null && Table[mostTop][mostLeft-1] != null) {
-                    handleFall(mostLeft - 1);
+            } else {
+                if (holei > 0 && Table[holei+1][holej] != null) {
+                    handleFall(holej);
                     return true;
+                } else {
+                    if (mostRight < 6 && mostBottom == 4 && Table[mostBottom+1][mostRight+1] == null) {
+                        handleFall(mostRight + 1);
+                        return true;
+                    } else if (mostRight < 6 && mostBottom < 4 && Table[mostBottom+1][mostRight+1] == null && Table[mostBottom+2][mostRight+1] != null) {
+                        handleFall(mostRight + 1);
+                        return true;
+                    }
+                    else if (mostLeft > 0 && mostTop > 0 && Table[mostTop-1][mostLeft-1] == null && Table[mostTop][mostLeft-1] != null) {
+                        handleFall(mostLeft - 1);
+                        return true;
+                    }
                 }
             }
         }
@@ -307,10 +328,10 @@ public class Grid {
         if (returnDiagonal) return;
 
 
-        returnDiagonal = blockDiagonalLeft(i,j,mostLeft,mostRight);
+        returnDiagonal = blockDiagonalLeft(i,j,mostLeft,mostRight, true);
         if (returnDiagonal) return;
         if (j<6) {
-            returnDiagonal = blockDiagonalLeft(i, j+1, mostLeft, mostRight);
+            returnDiagonal = blockDiagonalLeft(i, j+1, mostLeft, mostRight, true);
             if (returnDiagonal) return;
         }
         randomPlace();
@@ -335,6 +356,10 @@ public class Grid {
                 }
                 if (j<6) {
                     canPlayerWin = blockRow(mostBottom-2, j+1, 0, 0, false);
+                    if (canPlayerWin && !forbiddenCases.contains(j)) {
+                        forbiddenCases.add(j);
+                    }
+                    canPlayerWin = blockDiagonalLeft(mostBottom-1, j+1, 0, 0, false);
                     if (canPlayerWin && !forbiddenCases.contains(j)) {
                         forbiddenCases.add(j);
                     }
@@ -449,6 +474,7 @@ public class Grid {
         boolean fallen = false;
         int length = 0;
         removeForbiddenCase(i);
+        System.out.println(forbiddenCases);
         while (!fallen) {
             if (Objects.equals(Table[0][i], player1.caractere) || Objects.equals(Table[0][i], player2.caractere)) {
                 System.out.println("Cette colonne est pleine");
@@ -473,8 +499,8 @@ public class Grid {
                 i++;
             }
         }
-        int randomX = getRandomNumberUsingNextInt(0, Table[0].length);
 
+        int randomX = getRandomNumberUsingNextInt(0, Table[0].length);
         if (i <= forbiddenCases.size()) {
             handleFall(forbiddenCases.get(0));
             removeForbiddenCase(0);
