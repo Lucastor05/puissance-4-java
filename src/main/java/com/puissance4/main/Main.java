@@ -11,7 +11,31 @@ import com.puissance4.modules.Top10;
 public class Main {
     public static void main(String[] args) {
         Grid grid = new Grid();
-
+        Scanner sc = new Scanner(System.in);
+        Player player1 = new Player("Player_1", "X", "");
+        grid.setPlayer1(player1);
+        grid.setActualPlayer(player1);
+        Ia player2 = new Ia("Player_2", "O", "", 4);
+        grid.setPlayer2(player2);
+        while (grid.isPlay()) {
+            if (grid.getRound()%2 != 0) {
+                grid.printGrid();
+                System.out.println("Choisissez la colonne sur laquelle vous voulez jouer :");
+                int i = sc.nextInt();
+                grid.handleFall(i - 1);
+            } else {
+                if (player2.getDifficulty() == 1) {
+                    grid.randomPlace();
+                } else if (player2.getDifficulty() == 2) {
+                    grid.iaLvl2();
+                } else if (player2.getDifficulty() == 3) {
+                    grid.iaLvl3();
+                } else if (player2.getDifficulty() == 4) {
+                    grid.iaLvl4();
+                }
+            }
+        }
+        /*
         Scanner menu = new Scanner(System.in);
         System.out.println("Menu:");
         System.out.println("Pour jouer tapé 1");
@@ -82,6 +106,6 @@ public class Main {
             }
         } else if (choixmenu.equals(3)) {
             System.exit(0);
-        }
+        }*/
     }
 }

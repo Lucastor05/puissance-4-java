@@ -24,6 +24,7 @@ public class Grid {
     private int lastIaI;
     private int lastIaJ;
     private List<Integer> forbiddenCases = new ArrayList<Integer>();
+    private List<Integer> mustPlay = new ArrayList<Integer>();
 
 
 
@@ -304,6 +305,65 @@ public class Grid {
         return false;
     }
 
+    public boolean usefulDiagonalRight(int IaI, int IaJ) {
+        System.out.println("can play diag right 2 : "+blockDiagonalRight(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2));
+        if (IaJ < 6 && IaI > 0 && IaI < 5 && Table[IaI-1][IaJ+1] == null && Table[IaI+1][IaJ+1] != null) {
+            System.out.println("handle fall : "+(IaJ+1));
+            if (Table[IaI][IaJ+1] == null) {
+                mustPlay.add(IaJ+1);
+            }
+            handleFall(IaJ+1);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean canWinHereColumn(int j){
+        int compteur = 0;
+        for(int i = 0; i <6; i++){
+            if(!player1.caractere.equals(Table[i][j])){
+                compteur++;
+            }else{
+                break;
+            }
+        }
+
+        if(compteur >= 4){return true;}
+        return false;
+
+    }
+
+    public boolean usefulRow(int IaI, int IaJ) {
+        if (Table[IaI][3] != null && !Table[IaI][3].equals(player1.caractere)) {
+            if (IaJ < 3) {
+                if (Table[IaI][0] != null && !Table[IaI][0].equals(player1.caractere)) {
+                    return false;
+                }
+                for (int j = 0; j<3; j++) {
+                    if (Table[IaI][j] != null && Table[IaI][j].equals(player1.caractere)) {
+                        if (IaI < 4 && Table[IaI+2][j] == null) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            } else {
+                if (Table[IaI][6] != null && !Table[IaI][6].equals(player1.caractere)) {
+                    return false;
+                }
+                for (int j = 3; j<7; j++) {
+                    if (Table[IaI][j] != null && Table[IaI][j].equals(player1.caractere)) {
+                        if (IaI < 4 && Table[IaI+2][j] == null) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void iaLvl2 () {
         int columnCount = 1;
 
@@ -374,17 +434,20 @@ public class Grid {
 
         String signIa = player2.caractere;
 
-        //IA WIN
         //Horizontal
-        boolean returnRow = blockRow(IaI,IaJ,mostLeftIA,mostRightIA, true, signIa, 2);
-        if (returnRow) return;
-        if (IaI>0) {
-            if (IaJ>0) {
-                returnRow = blockRow(IaI-1,IaJ-1,mostLeftIA,mostRightIA, true, signIa, 2);
-                if (returnRow) return;
-            } else if (IaJ<6) {
-                returnRow = blockRow(IaI-1,IaJ+1,mostLeftIA,mostRightIA, true, signIa, 2);
-                if (returnRow) return;
+        System.out.println("last coordinates : "+IaI+","+IaJ);
+        if (usefulRow(IaI, IaJ)) {
+            System.out.println("can play row 2");
+            boolean returnRow = blockRow(IaI, IaJ, mostLeftIA, mostRightIA, true, signIa, 2);
+            if (returnRow) return;
+            if (IaI > 0) {
+                if (IaJ > 0) {
+                    returnRow = blockRow(IaI - 1, IaJ - 1, mostLeftIA, mostRightIA, true, signIa, 2);
+                    if (returnRow) return;
+                } else if (IaJ < 6) {
+                    returnRow = blockRow(IaI - 1, IaJ + 1, mostLeftIA, mostRightIA, true, signIa, 2);
+                    if (returnRow) return;
+                }
             }
         }
 
@@ -394,17 +457,22 @@ public class Grid {
             tempIaI += 1;
         }
         if (columnCount==2) {
-            handleFall(IaJ);
-            return;
+            if(canWinHereColumn(IaJ)){
+                handleFall(IaJ);
+                return;
+            }
         }
 
 
         //Diagonal Droite
-        boolean returnDiagonal = blockDiagonalRight(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 2);
-        if (returnDiagonal) return;
-        returnDiagonal = blockDiagonalRight(IaI,IaJ-1,mostLeftIA,mostRightIA,true, signIa, 2);
-        if (returnDiagonal) return;
-
+        boolean returnDiagonal;
+        if (usefulDiagonalRight(IaI, IaJ)) {
+            return;/*
+            returnDiagonal = blockDiagonalRight(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 2);
+            if (returnDiagonal) return;
+            returnDiagonal = blockDiagonalRight(IaI,IaJ-1,mostLeftIA,mostRightIA,true, signIa, 2);
+            if (returnDiagonal) return;*/
+        }
 
         //Diagonal Gauche
         returnDiagonal = blockDiagonalLeft(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 2);
@@ -636,19 +704,31 @@ public class Grid {
         }
     }
 
+    public int removeMustPlayCase(int i) {
+        if (mustPlay.contains(0)) {
+            int index = mustPlay.indexOf(0);
+            return mustPlay.remove(index);
+        }
+        return -1;
+    }
+
     public void handleFall (int i) {
         String sign = actualPlayer.caractere;
         boolean fallen = false;
         int length = 0;
         Scanner sc = new Scanner(System.in);
         removeForbiddenCase(i);
+        int returnMustPlay = removeMustPlayCase(i);
+        if (actualPlayer.equals(player2) && mustPlay.size() > 0) {
+            if (returnMustPlay > 0) i = returnMustPlay;
+        }
+        System.out.println("must play : "+mustPlay);
+        if (mustPlay.size() > 0) System.out.println("play : "+i);
         while (!fallen) {
             if (player1.caractere.equals(Table[0][i]) || player2.caractere.equals(Table[0][i])) {
                 System.out.println("Cette colonne est pleine");
-
                 System.out.println("Entré une nouvelle colonne : ");
                 i = sc.nextInt()-1;
-
             } else {
                 if (length == Table.length-1 || player1.caractere.equals(Table[length + 1][i]) || player2.caractere.equals(Table[length + 1][i])) {
                     Table[length][i] = sign;
