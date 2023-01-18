@@ -1,9 +1,13 @@
 package com.puissance4.modules;
 
 import java.util.*;
+import com.puissance4.modules.Top10;
+import com.puissance4.modules.Player;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
+import java.lang.String;
 
 
 
@@ -24,6 +28,7 @@ public class Grid {
 
 
     public void printGrid() {
+        String ANSI_RESET = "\u001B[0m";
         System.out.println("  1   2   3   4   5   6   7  ");
         for (int i = 0; i < 6; i++) { //une boucle avec i qui a pour valeur la taille du tableau, se qui equivaut au ligne
             for (int j = 0; j < 7; j++) {
@@ -32,14 +37,14 @@ public class Grid {
                     sign = Table[i][j];
                 }
                 if(j==0){
-                    System.out.print("│ "+sign + " │");
+                    System.out.print("\u001B[34m"+"│ "+ANSI_RESET+sign +"\u001B[34m"+" │"+ANSI_RESET);
                 }else {
-                    System.out.print(" "+sign + " │");
+                    System.out.print(" "+sign +"\u001B[34m"+" │"+ANSI_RESET);
                 }
             }
             System.out.print("\n");
         }
-        System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
+        System.out.println("\u001B[34m"+"└───┴───┴───┴───┴───┴───┴───┘"+ANSI_RESET);
     }
 
     public int getRandomNumberUsingNextInt(int min, int max) {
@@ -595,7 +600,21 @@ public class Grid {
 
         if (rowCount >= 4 || columnCount >= 4 || diagonalRight >= 4 || diagonalLeft >= 4) {
             printGrid();
-            System.out.println("Victoire de "+actualPlayer.pseudo);
+            String ANSI_RESET = "\u001B[0m";
+            String ANSI_GREEN = "\u001B[32m";
+            System.out.println(ANSI_GREEN+"Victoire de "+actualPlayer.pseudo+" en utilisant les caractères '"+actualPlayer.caractere+"'"+ANSI_RESET);
+            if(actualPlayer.equals(player1)){
+                String Winnerplayer=actualPlayer.pseudo;
+                Integer Score= Round/2;
+                Top10.createfiletxt();
+                System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
+            } else if (actualPlayer.equals(player2)) {
+                String Winnerplayer=actualPlayer.pseudo;
+                Integer Score= (Round/2)+1;
+                Top10.createfiletxt();
+                System.out.println("2");
+                System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
+            }
             Play = false;
         }
 
@@ -700,4 +719,5 @@ public class Grid {
     public void setActualPlayer(Player actualPlayer) {
         this.actualPlayer = actualPlayer;
     }
+
 }
