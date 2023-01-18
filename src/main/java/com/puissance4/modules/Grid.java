@@ -41,6 +41,59 @@ public class Grid {
         }
         System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
     }
+
+    public boolean canWinHereColumn(int j){
+        int compteur = 0;
+        for(int i = 0; i <6; i++){
+            if(!player1.caractere.equals(Table[i][j])){
+                compteur++;
+            }else{
+                break;
+            }
+        }
+
+        if(compteur >= 4){return true;}
+        return false;
+
+    }
+
+    public boolean canWinHereRow(int j){
+        int compteur = 0;
+        int mostBottom = 5;
+        int mostLeft = 0;
+        int mostRight = 0;
+        int tempj = j;
+
+        for (int i = 0; i < Table.length; i++) {
+            if (Table[i][j] != null) {
+                mostBottom = i;
+                break;
+            }
+        }
+
+        System.out.println(mostBottom+","+j);
+
+        tempj = j;
+        while (tempj >= 0) {
+            if (!Objects.equals(Table[mostBottom][tempj], player1.caractere)) {
+                mostLeft = tempj;
+            }
+            tempj -= 1;
+        }
+        tempj = j;
+        while (tempj < 7) {
+            if (!Objects.equals(Table[mostBottom][tempj], player1.caractere)) {
+                mostRight = tempj;
+            } else {
+                break;
+            }
+            tempj += 1;
+        }
+        System.out.println("right : "+mostRight);
+        System.out.println("compteur  : "+compteur);
+        return compteur >= 4;
+    }
+
     public int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
@@ -372,6 +425,7 @@ public class Grid {
 
         //IA WIN
         //Horizontal
+        if (Round > 2) System.out.println(canWinHereRow(IaJ));
         boolean returnRow = blockRow(IaI,IaJ,mostLeftIA,mostRightIA, true, signIa, 2);
         if (returnRow) return;
         if (IaI>0) {
@@ -390,8 +444,11 @@ public class Grid {
             tempIaI += 1;
         }
         if (columnCount==2) {
-            handleFall(IaJ);
-            return;
+            System.out.println(canWinHereColumn(IaJ));
+            if(canWinHereColumn(IaJ)){
+                handleFall(IaJ);
+                return;
+            }
         }
 
 
