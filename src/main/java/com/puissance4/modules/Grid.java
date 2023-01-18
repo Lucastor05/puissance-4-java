@@ -19,9 +19,9 @@ public class Grid {
     private int lastj;
     private int lastIaI;
     private int lastIaJ;
-
-
     private List<Integer> forbiddenCases = new ArrayList<Integer>();
+
+
 
     public void printGrid() {
         System.out.println("  1   2   3   4   5   6   7  ");
@@ -41,6 +41,7 @@ public class Grid {
         }
         System.out.println("└───┴───┴───┴───┴───┴───┴───┘");
     }
+
     public int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
@@ -347,10 +348,10 @@ public class Grid {
             if (returnDiagonal) return;
         }
 
-        iaLvl4_2();
+        iaLvl4AlignThree();
     }
 
-    public void iaLvl4_2 () {
+    public void iaLvl4AlignThree() {
         int columnCount = 1;
 
         //IA variables
@@ -365,8 +366,6 @@ public class Grid {
         int i = lasti;
         int j = lastj;
         int tempj = j;
-
-
 
         String signIa = player2.caractere;
 
