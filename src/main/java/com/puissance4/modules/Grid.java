@@ -1,11 +1,11 @@
 package com.puissance4.modules;
+import com.puissance4.modules.Top10;
 import com.puissance4.modules.Player;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.String;
-
 public class Grid {
     static int Players;
     static String[][] Table = new String[6][7];
@@ -27,7 +27,6 @@ public class Grid {
         if(choixmenuparti==1||choixmenuparti==2) {
             Integer numberOfPlayers=choixmenuparti;
             Scanner sc = new Scanner(System.in);
-
             player1 = new Player("joueur1", "X", "");
             player1.Playerspersonnalisation();
             actualPlayer = player1;
@@ -46,10 +45,8 @@ public class Grid {
             }
         } else if (choixmenuparti==2) {
         System.exit(0);
+        }
     }
-
-    }
-
     public void sout() {
         String ANSI_RESET = "\u001B[0m";
         System.out.println("  1   2   3   4   5   6   7  ");
@@ -58,7 +55,6 @@ public class Grid {
                 String sign ="-";
                 if (Objects.equals(Table[i][j], player1.caractere) || Objects.equals(Table[i][j], player2.caractere)) {
                     sign = Table[i][j];
-                    System.out.print(sign);
                 }
                 if(j==0){
                     System.out.print("\u001B[34m"+"│ "+ANSI_RESET+sign +"\u001B[34m"+" │"+ANSI_RESET);
@@ -70,13 +66,10 @@ public class Grid {
         }
         System.out.println("\u001B[34m"+"└───┴───┴───┴───┴───┴───┴───┘"+ANSI_RESET);
     }
-
-
     public int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
     }
-
     public void winCondition (int i, int j) {
         int rowCount = 1;
         int columnCount = 1;
@@ -84,9 +77,7 @@ public class Grid {
         int diagonalRight = 1;
         int tempi = i;
         int tempj = j;
-
         String sign = actualPlayer.caractere;
-
         //check left / right sides
         while (tempj > 0 && Table[i][tempj-1] == sign) {
             rowCount += 1;
@@ -97,14 +88,11 @@ public class Grid {
             rowCount += 1;
             tempj += 1;
         }
-
-
         //check down side
         while (tempi < 5 && Table[tempi+1][j] == sign) {
             columnCount += 1;
             tempi += 1;
         }
-
         //check diagonal right
         tempi = i;
         tempj = j;
@@ -120,7 +108,6 @@ public class Grid {
             tempi -= 1;
             tempj += 1;
         }
-
         //check diagonal left
         tempi = i;
         tempj = j;
@@ -136,26 +123,33 @@ public class Grid {
             tempi += 1;
             tempj += 1;
         }
-
         if (rowCount >= 4 || columnCount >= 4 || diagonalRight >= 4 || diagonalLeft >= 4) {
             sout();
             String ANSI_RESET = "\u001B[0m";
             String ANSI_GREEN = "\u001B[32m";
-            System.out.println(ANSI_GREEN+"Victoire des "+actualPlayer.pseudo+ANSI_RESET);
+            System.out.println(ANSI_GREEN+"Victoire de "+actualPlayer.pseudo+" en utilisant les caractères '"+actualPlayer.caractere+"'"+ANSI_RESET);
+            if(actualPlayer.equals(player1)){
+                String Winnerplayer=actualPlayer.pseudo;
+                Integer Score= Round/2;
+                Top10.createfiletxt();
+                System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
+            } else if (actualPlayer.equals(player2)) {
+                String Winnerplayer=actualPlayer.pseudo;
+                Integer Score= (Round/2)+1;
+                Top10.createfiletxt();
+                System.out.println("2");
+                System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
+            }
             Play = false;
         }
-
         if (actualPlayer.equals(player1)) {
             actualPlayer = player2;
         } else {
             actualPlayer = player1;
         }
     }
-
     public void handleFall (int i) {
-        String ANSI_RESET = "\u001B[0m";
-        String ANSI_PLAYER = actualPlayer.couleur;
-        String sign = ANSI_PLAYER+actualPlayer.caractere+ANSI_RESET;
+        String sign = actualPlayer.caractere;
         boolean fallen = false;
         int length = 0;
         while (!fallen) {
@@ -174,7 +168,6 @@ public class Grid {
         }
         winCondition(length, i);
     }
-
     public void randomPlace () {
         int randomX = getRandomNumberUsingNextInt(0, Table[0].length);
         while (Table[0][randomX] == player1.caractere || Table[0][randomX] == player2.caractere) {
