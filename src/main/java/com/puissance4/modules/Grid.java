@@ -29,39 +29,45 @@ public class Grid {
 
 
     public void printGrid() {
+        /*
+        Fonction qui affiche l'etat actuel de la grille en jeu
+         */
         String ANSI_RESET = "\u001B[0m";
-        System.out.println("  1   2   3   4   5   6   7  ");
-        for (int i = 0; i < 6; i++) { //une boucle avec i qui a pour valeur la taille du tableau, se qui equivaut au ligne
-            for (int j = 0; j < 7; j++) {
+        System.out.println("  1   2   3   4   5   6   7  ");//affiche les numeros de colonne
+        for (int i = 0; i < 6; i++) { //une boucle avec i qui a pour valeur a ne pas depasser 6, se qui equivaut au ligne
+            for (int j = 0; j < 7; j++) {//une boucle avec j qui a pour valeur a ne pas depasser 7, se qui equivaut au colonne
                 String sign = "-";
-                if (Objects.equals(Table[i][j], player1.caractere) || Objects.equals(Table[i][j], player2.caractere)) {
+                if (player1.caractere.equals(Table[i][j]) || player2.caractere.equals(Table[i][j])) {
+                    /*
+                    modifie la variable sign celon si la case possede le symbole du joueur 1 ou 2
+                     */
                     sign = Table[i][j];
                 }
 
-                if(player1.caractere.equals(Table[i][j])){
+                if(player1.caractere.equals(Table[i][j])){//si la case appartient au joueur 1
                     if(j==0){
-                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player1.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player1.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 1
                     }else {
-                        System.out.print(" "+player1.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                        System.out.print(" "+player1.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 1
                     }
-                }else if(player2.caractere.equals(Table[i][j])){
+                }else if(player2.caractere.equals(Table[i][j])){//si la case appartient au joueur 2
                     if(j==0){
-                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player2.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player2.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 2
                     }else {
-                        System.out.print(" "+player2.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                        System.out.print(" "+player2.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 2
                     }
-                }else{
+                }else{//si la case est vide
                     if(j==0){
-                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+sign +"\u001B[34m"+" │"+ANSI_RESET);
+                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+sign +"\u001B[34m"+" │"+ANSI_RESET);//affiche la case sans couleur
                     }else {
-                        System.out.print(" "+sign +"\u001B[34m"+" │"+ANSI_RESET);
+                        System.out.print(" "+sign +"\u001B[34m"+" │"+ANSI_RESET);//affiche la case sans couleur
                     }
                 }
 
             }
             System.out.print("\n");
         }
-        System.out.println("\u001B[34m"+"└───┴───┴───┴───┴───┴───┴───┘"+ANSI_RESET);
+        System.out.println("\u001B[34m"+"└───┴───┴───┴───┴───┴───┴───┘"+ANSI_RESET);//affiche le bas du tableau
     }
 
     public int getRandomNumberUsingNextInt(int min, int max) {
