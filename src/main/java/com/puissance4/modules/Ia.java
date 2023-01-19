@@ -23,21 +23,21 @@ public class Ia extends Player{
         String ANSI_RESET = "\u001B[0m"; //reset la couleur
 
 
-        while(!valide) {
+        while(!valide) {//si la reponse donné n'est pas valide
             Scanner difficultyScan = new Scanner(System.in);
 
-            System.out.println("\nChoisissez la difficulté du bot ? "+ANSI_GREEN+"(de 1 à 4)"+ANSI_RESET);
+            System.out.println("\nChoisissez la difficulté du bot ? "+ANSI_GREEN+"(de 1 à 4)"+ANSI_RESET);//message d'erreur
 
-            if (difficultyScan.hasNextInt()) {
+            if (difficultyScan.hasNextInt()) {//si la reponse est un nombre entier
                 int nombre = difficultyScan.nextInt();
-                if(nombre > 0 && nombre < 5){
-                    this.difficulty = nombre;
+                if(nombre > 0 && nombre < 5){//si la reponse est entre 1 et 4 compris
+                    this.difficulty = nombre; //MàJ de la variable difficulty
                     valide = true;
                 }else {
-                    System.out.println(ANSI_RED+"\nNombre invalide! Veuillez en entrer un nouveau!"+ANSI_RESET);
+                    System.out.println(ANSI_RED+"\nNombre invalide! Veuillez en entrer un nouveau!"+ANSI_RESET);//message d'erreur
                 }
             } else {
-                System.out.println(ANSI_RED+"\nNombre invalide! Veuillez en entrer un nouveau!"+ANSI_RESET);
+                System.out.println(ANSI_RED+"\nNombre invalide! Veuillez en entrer un nouveau!"+ANSI_RESET);//message d'erreur
             }
         }
     }
