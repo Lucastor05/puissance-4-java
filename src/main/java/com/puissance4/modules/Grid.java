@@ -1,5 +1,6 @@
 package com.puissance4.modules;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import com.puissance4.modules.Top10;
 import com.puissance4.modules.Player;
@@ -26,12 +27,21 @@ public class Grid {
     private List<Integer> forbiddenCases = new ArrayList<Integer>();
     private List<Integer> mustPlay = new ArrayList<Integer>();
 
+    public CoordinateList getListWinningPons() {
+        return listWinningPons;
+    }
+
+    private CoordinateList listWinningPons = new CoordinateList();
+
 
 
     public void printGrid() {
         /*
         Fonction qui affiche l'etat actuel de la grille en jeu
          */
+        String ANSI_RED = "\u001B[31m"; //permet de changer la couleur du texte dans la console en rouge
+        String ANSI_GREEN = "\u001B[32m"; //permet de changer la couleur du texte dans la console en rouge
+
         String ANSI_RESET = "\u001B[0m";
         System.out.println("  1   2   3   4   5   6   7  ");//affiche les numeros de colonne
         for (int i = 0; i < 6; i++) { //une boucle avec i qui a pour valeur a ne pas depasser 6, se qui equivaut au ligne
@@ -43,25 +53,33 @@ public class Grid {
                      */
                     sign = Table[i][j];
                 }
+                if(!this.listWinningPons.contains(i,j)) {
+                    if (player1.caractere.equals(Table[i][j])) {//si la case appartient au joueur 1
+                        if (j == 0) {
+                            System.out.print("\u001B[34m" + "│ " + ANSI_RESET + player1.couleur + sign + ANSI_RESET + "\u001B[34m" + " │" + ANSI_RESET);//affiche la case avec la couleur du joueur 1
+                        } else {
+                            System.out.print(" " + player1.couleur + sign + ANSI_RESET + "\u001B[34m" + " │" + ANSI_RESET);//affiche la case avec la couleur du joueur 1
+                        }
+                    } else if (player2.caractere.equals(Table[i][j])) {//si la case appartient au joueur 2
+                        if (j == 0) {
+                            System.out.print("\u001B[34m" + "│ " + ANSI_RESET + player2.couleur + sign + ANSI_RESET + "\u001B[34m" + " │" + ANSI_RESET);//affiche la case avec la couleur du joueur 2
+                        } else {
+                            System.out.print(" " + player2.couleur + sign + ANSI_RESET + "\u001B[34m" + " │" + ANSI_RESET);//affiche la case avec la couleur du joueur 2
+                        }
+                    } else {//si la case est vide
+                        if (j == 0) {
+                            System.out.print("\u001B[34m" + "│ " + ANSI_RESET + sign + "\u001B[34m" + " │" + ANSI_RESET);//affiche la case sans couleur
+                        } else {
+                            System.out.print(" " + sign + "\u001B[34m" + " │" + ANSI_RESET);//affiche la case sans couleur
+                        }
+                    }
+                }else{
+                    if (j == 0) {
+                        System.out.print("\u001B[34m" + "│ " + ANSI_RESET + ANSI_GREEN + sign + ANSI_RESET + "\u001B[34m" + " │" + ANSI_RESET);
+                    } else {
+                        System.out.print(" " + ANSI_GREEN + sign + ANSI_RESET + "\u001B[34m" + " │" + ANSI_RESET);
+                    }
 
-                if(player1.caractere.equals(Table[i][j])){//si la case appartient au joueur 1
-                    if(j==0){
-                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player1.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 1
-                    }else {
-                        System.out.print(" "+player1.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 1
-                    }
-                }else if(player2.caractere.equals(Table[i][j])){//si la case appartient au joueur 2
-                    if(j==0){
-                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player2.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 2
-                    }else {
-                        System.out.print(" "+player2.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);//affiche la case avec la couleur du joueur 2
-                    }
-                }else{//si la case est vide
-                    if(j==0){
-                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+sign +"\u001B[34m"+" │"+ANSI_RESET);//affiche la case sans couleur
-                    }else {
-                        System.out.print(" "+sign +"\u001B[34m"+" │"+ANSI_RESET);//affiche la case sans couleur
-                    }
                 }
 
             }
@@ -80,6 +98,7 @@ public class Grid {
     }
 
     public boolean checkDiagonal(int mostRight, int mostLeft, int j, int i, int holej, int holei) {
+
         if (mostRight < j) {
             return false;
         }
@@ -619,6 +638,9 @@ public class Grid {
         lasti = i;
         lastj = j;
 
+        CoordinateList save = new CoordinateList();
+
+
         int rowCount = 1;
         int columnCount = 1;
         int diagonalLeft = 1;
@@ -644,26 +666,47 @@ public class Grid {
 
         //check left / right sides
         while (tempj > 0 && Objects.equals(Table[i][tempj - 1], sign)) {
+            this.listWinningPons.addCoordinate(i ,tempj-1);
             rowCount += 1;
             tempj -= 1;
         }
         tempj = j;
         while (tempj < 6 && Objects.equals(Table[i][tempj + 1], sign)) {
+            this.listWinningPons.addCoordinate(i ,tempj+1);
             rowCount += 1;
             tempj += 1;
+        }
+
+        this.listWinningPons.addCoordinate(i ,j);
+        if(rowCount < 4){
+            this.listWinningPons.clear();
+        }else{
+            save.merge(this.listWinningPons);
+            this.listWinningPons.clear();
         }
 
 
         //check down side
         while (tempi < 5 && Objects.equals(Table[tempi + 1][j], sign)) {
+            this.listWinningPons.addCoordinate(tempi+1 ,j);
             columnCount += 1;
             tempi += 1;
         }
+
+        this.listWinningPons.addCoordinate(i ,j);
+        if(columnCount < 4){
+            this.listWinningPons.clear();
+        }else{
+            save.merge(this.listWinningPons);
+            this.listWinningPons.clear();
+        }
+
 
         //check diagonal right
         tempi = i;
         tempj = j;
         while (tempi < 5 && tempj > 0 && Objects.equals(Table[tempi + 1][tempj - 1], sign)) {
+            this.listWinningPons.addCoordinate(tempi-1 ,tempj-1);
             diagonalRight += 1;
             tempi += 1;
             tempj -= 1;
@@ -671,15 +714,25 @@ public class Grid {
         tempi = i;
         tempj = j;
         while (tempi > 0 && tempj < 6 && Objects.equals(Table[tempi - 1][tempj + 1], sign)) {
+            this.listWinningPons.addCoordinate(tempi-1 ,tempj+1);
             diagonalRight+= 1;
             tempi -= 1;
             tempj += 1;
+        }
+
+        this.listWinningPons.addCoordinate(i ,j);
+        if(diagonalRight < 4){
+            this.listWinningPons.clear();
+        }else{
+            save.merge(this.listWinningPons);
+            this.listWinningPons.clear();
         }
 
         //check diagonal left
         tempi = i;
         tempj = j;
         while (tempi > 0 && tempj > 0 && Objects.equals(Table[tempi - 1][tempj - 1], sign)) {
+            this.listWinningPons.addCoordinate(tempi-1 ,tempj-1);
             diagonalLeft += 1;
             tempi -= 1;
             tempj -= 1;
@@ -687,10 +740,23 @@ public class Grid {
         tempi = i;
         tempj = j;
         while (tempi < 5 && tempj < 6 && Objects.equals(Table[tempi + 1][tempj + 1], sign)) {
+            this.listWinningPons.addCoordinate(tempi+1 ,tempj+1);
             diagonalLeft += 1;
             tempi += 1;
             tempj += 1;
         }
+
+        this.listWinningPons.addCoordinate(i ,j);
+        if(diagonalLeft < 4){
+            this.listWinningPons.clear();
+        }else{
+            save.merge(this.listWinningPons);
+            this.listWinningPons.clear();
+        }
+
+        this.listWinningPons.merge(save);
+        save.clear();
+
 
         if (rowCount >= 4 || columnCount >= 4 || diagonalRight >= 4 || diagonalLeft >= 4) {
             printGrid();
@@ -699,7 +765,7 @@ public class Grid {
             System.out.println(ANSI_GREEN+"Victoire de "+actualPlayer.pseudo+" en utilisant les caractères '"+actualPlayer.caractere+"'"+ANSI_RESET);
             if(actualPlayer.equals(player1)){
                 String Winnerplayer=actualPlayer.pseudo;
-                Integer Score= Round/2;
+                int Score= Round/2;
                 Top10.createfiletxt();
                 System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
             } else if (actualPlayer.equals(player2)) {
