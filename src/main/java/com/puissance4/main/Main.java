@@ -19,7 +19,7 @@ public class Main {
 
         boolean restart = true;
         while(restart) {
-
+            grid = new Grid();
             boolean choixvalide = false;
 
 
@@ -72,7 +72,7 @@ public class Main {
 
                                     }
 
-
+                                    grid.setPlay(true);
                                     //lancement jeu avec parametre precedent
                                     grid.setPlayers(numberOfPlayers);
                                     while (grid.isPlay()) {//si le jeu est en cour
