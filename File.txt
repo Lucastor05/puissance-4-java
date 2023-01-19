@@ -1,0 +1,11 @@
+joueur1 4
+Player_1 6
+BOT 10
+joueur2 6
+Player_1 6
+Player_1 4
+Player_1 6
+Player_1 4
+Player_1 4
+joueur2 6
+Player_1 4
