@@ -327,12 +327,10 @@ public class Grid {
             } else {
                 if (i < 5) {
                     if (hole > 0 && Table[i+1][hole] != null) {
-                        System.out.println("block row hole");
                         handleFall(hole);
                         return true;
                     }
                     if (mostLeft > 0 && Table[i][mostLeft - 1] == null && Table[i + 1][mostLeft - 1] != null) {
-                        System.out.println("block row left");
                         handleFall(mostLeft - 1);
                         if (mostRight < 6 && Table[i][mostRight + 1] == null && Table[i + 1][mostRight + 1] != null && max >= 3) {
                             if (!mustPlay.contains(mostRight+1)) {
@@ -341,7 +339,6 @@ public class Grid {
                         }
                         return true;
                     } else if (mostRight < 6 && Table[i][mostRight + 1] == null && Table[i + 1][mostRight + 1] != null) {
-                        System.out.println("block row right");
                         handleFall(mostRight + 1);
                         if (mostLeft > 0 && Table[i][mostLeft - 1] == null && Table[i + 1][mostLeft - 1] != null && max >= 3) {
                             if (!mustPlay.contains(mostLeft-1)) {
@@ -380,9 +377,7 @@ public class Grid {
 
     //check if it's useful to play diagonal left for the ia
     public boolean usefulDiagonalLeft(int IaI, int IaJ) {
-        System.out.println("can play diag left 2 : "+blockDiagonalLeft(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2));
         if (IaJ > 0 && IaI > 0 && IaI < 5 && Table[IaI-1][IaJ-1] == null && Table[IaI+1][IaJ-1] != null && blockDiagonalRight(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2)) {
-            System.out.println("handle fall : "+(IaJ-1));
             if (Table[IaI][IaJ-1] == null) {
                 mustPlay.add(IaJ-1);
             }
@@ -394,9 +389,7 @@ public class Grid {
 
     //check if it's useful to play diagonal right for the ia
     public boolean usefulDiagonalRight(int IaI, int IaJ) {
-        System.out.println("can play diag right 2 : "+blockDiagonalRight(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2));
         if (IaJ < 6 && IaI > 0 && IaI < 5 && Table[IaI-1][IaJ+1] == null && Table[IaI+1][IaJ+1] != null && blockDiagonalRight(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2)) {
-            System.out.println("handle fall : "+(IaJ+1));
             if (Table[IaI][IaJ+1] == null) {
                 mustPlay.add(IaJ+1);
             }
@@ -456,7 +449,6 @@ public class Grid {
 
     //ia lvl2 turn
     public void iaLvl2 () {
-        System.out.println("lvl2");
         int columnCount = 1;
 
         int i = lasti;
@@ -511,7 +503,6 @@ public class Grid {
 
     public void iaLvl4AlignTwo () {
         int columnCount = 1;
-        System.out.println("lvl4 align two");
 
         //IA variables
         int IaI = lastIaI;
@@ -593,9 +584,7 @@ public class Grid {
         String signIa = player2.caractere;
 
         //Horizontal
-        System.out.println("last coordinates : "+IaI+","+IaJ);
         if (usefulRow(IaI, IaJ)) {
-            System.out.println("can play row 2");
             boolean returnRow = blockRow(IaI, IaJ, mostLeftIA, mostRightIA, true, signIa, 2);
             if (returnRow) return;
             if (IaI > 0) {
@@ -645,7 +634,6 @@ public class Grid {
     //ia lvl3 program
     //spot the squares where it can't plays without make the player win
     public void iaLvl3() {
-        System.out.println("lvl3");
         for (int j = 0; j<Table[0].length; j++) {
             int mostBottom = 6;
             for (int i = 0; i<Table.length; i++) {
@@ -687,7 +675,6 @@ public class Grid {
     //call iaLvl4AlignThree neither
     public void iaLvl4 () {
         int columnCount = 1;
-        System.out.println("lvl4");
 
         //IA variables
         int IaI = lastIaI;
@@ -729,7 +716,6 @@ public class Grid {
                 return;
             }
         }
-
 
         //Diagonal Droite
         boolean returnDiagonal = blockDiagonalRight(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 3);
@@ -876,7 +862,7 @@ public class Grid {
         this.listWinningPons.merge(save);
         save.clear();
 
-
+        //message de fin de partie
         if (rowCount >= 4 || columnCount >= 4 || diagonalRight >= 4 || diagonalLeft >= 4) {
             printGrid();
             String ANSI_RESET = "\u001B[0m";
@@ -887,14 +873,14 @@ public class Grid {
                 int Score= Round/2;
                 Top10.createfiletxt(Winnerplayer,Score);
                 System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
-                System.out.println("voici notre tableau des meilleurs scores. Tu es dessus tu pense? on regarde!");
+                System.out.println("Voici notre tableau des meilleurs scores. Tu es dessus tu penses ? On regarde!");
                 Top10.comparaisonDeScoreEtTri();
             } else if (actualPlayer.equals(player2)) {
                 String Winnerplayer=actualPlayer.pseudo;
                 int Score= (Round/2)+1;
                 Top10.createfiletxt(Winnerplayer,Score);
                 System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
-                System.out.println("voici notre tableau des meilleurs scores. Tu es dessus tu pense? on regarde!");
+                System.out.println("Voici notre tableau des meilleurs scores. Tu es dessus tu penses ? On regarde!");
                 Top10.comparaisonDeScoreEtTri();
             }
             Play = false;
@@ -934,21 +920,20 @@ public class Grid {
         boolean fallen = false;
         int length = 0;
         Scanner sc = new Scanner(System.in);
+        //enlève la case de forbidden quand quelqu'un joue dessus
         removeForbiddenCase(i);
-        System.out.println("must play : "+mustPlay);
+        //remplace le prochain coup du bot par un endroit ou il doit absolument jouer au prochain coup
         if (actualPlayer.equals(player2) && mustPlay.size() > 0) {
-            System.out.println("i replaced");
             i = mustPlay.get(0);
         }
+        //enlève la case de must play quand quelqu'un joue dessus
         removeMustPlayCase(i);
-        if (mustPlay.size() > 0) System.out.println("play : "+i);
         while (!fallen) {
             if (player1.caractere.equals(Table[0][i]) || player2.caractere.equals(Table[0][i])) {
                 System.out.println("Cette colonne est pleine");
                 System.out.println("Entré une nouvelle colonne : ");
                 i = sc.nextInt()-1;
             } else {
-                System.out.println("fallin : "+i);
                 if (length == Table.length-1 || player1.caractere.equals(Table[length + 1][i]) || player2.caractere.equals(Table[length + 1][i])) {
                     Table[length][i] = sign;
                     Round += 1;
@@ -958,11 +943,13 @@ public class Grid {
                 }
             }
         }
+        //lance la vérification de fin de partie une fois le pion posé
         winCondition(length, i);
     }
 
     //place the square at a random place
     public void randomPlace () {
+        //calcul les endroits ou l'on peut encore jouer
         int i = 0;
         for (int j = 0; j<Table[0].length; j++) {
             if (Table[0][j] == null) {
@@ -970,6 +957,8 @@ public class Grid {
             }
         }
 
+        //prend une place au hasard sauf les place "forbidden" sur lesquels le bot lvl3 et + ne doit pas jouer
+        //le bot place malgré tout la case à un endroit "forbidden" s'il n'a pas d'autre choix
         int randomX = getRandomNumberUsingNextInt(0, Table[0].length);
         if (i <= forbiddenCases.size()) {
             handleFall(forbiddenCases.get(0));
@@ -982,6 +971,9 @@ public class Grid {
         }
     }
 
+    public void clearTable() {
+        this.Table = new String[6][7];
+    }
 
     public int getPlayers() {
         return Players;

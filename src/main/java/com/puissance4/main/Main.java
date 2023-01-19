@@ -26,10 +26,10 @@ public class Main {
 
             while (!choixvalide){
                 //1er menu
-                System.out.println("\nMenu:");
-                System.out.println("Pour jouer tapé "+ANSI_GREEN+"1"+ANSI_RESET);
-                System.out.println("Pour voir le Top 10 des meilleurs parties de Puissance 4 tapé "+ANSI_GREEN+"2"+ANSI_RESET);
-                System.out.println("Pour quitter le jeu tapé "+ANSI_RED+"3"+ANSI_RESET);
+                System.out.println("\nMenu :");
+                System.out.println(" - Pour jouer taper "+ANSI_GREEN+"1"+ANSI_RESET);
+                System.out.println(" - Pour voir le Top 10 des meilleurs parties de Puissance 4 taper "+ANSI_GREEN+"2"+ANSI_RESET);
+                System.out.println(" - Pour quitter le jeu taper "+ANSI_RED+"3"+ANSI_RESET);
                 System.out.println("Que souhaitez vous faire?");
                 Scanner menu = new Scanner(System.in);
 
@@ -40,11 +40,11 @@ public class Main {
 
                         while(!choixNbJoueurValide) {//tant que la reponse donne au prochain menu n'est pas valide
                             //2eme menu
-                            System.out.println("\nMenu de parti:");
-                            System.out.println("Pour jouer contre une IA tapé "+ANSI_GREEN+"1"+ANSI_RESET);
-                            System.out.println("Pour jouer contre un autre joueur tapé "+ANSI_GREEN+"2"+ANSI_RESET);
-                            System.out.println("Pour quitter le jeu tapé "+ANSI_RED+"3"+ANSI_RESET);
-                            System.out.println("Que souhaitez vous faire?");
+                            System.out.println("\nMenu de parti :");
+                            System.out.println(" - Pour jouer contre une IA taper "+ANSI_GREEN+"1"+ANSI_RESET);
+                            System.out.println(" - Pour jouer contre un autre joueur taper "+ANSI_GREEN+"2"+ANSI_RESET);
+                            System.out.println(" - Pour quitter le jeu taper "+ANSI_RED+"3"+ANSI_RESET);
+                            System.out.println("Que souhaitez-vous faire ?");
                             Scanner menuparti = new Scanner(System.in);
                             if (menuparti.hasNextInt()) {//si la reponse est un nombre entier
                                 int choixmenuparti = menuparti.nextInt();
@@ -71,8 +71,6 @@ public class Main {
                                         grid.setPlayer2(bot);//initialise l'ia comme joueur dans le plateau
 
                                     }
-
-
                                     //lancement jeu avec parametre precedent
                                     grid.setPlayers(numberOfPlayers);
                                     while (grid.isPlay()) {//si le jeu est en cour
@@ -97,18 +95,15 @@ public class Main {
                                     }
                                     choixNbJoueurValide = true;
                                     choixvalide = true;
-                                } else if (choixmenuparti == 2) {
+                                } else if (choixmenuparti == 3) {
                                     System.exit(0);
                                 }else{
-                                    System.out.println(ANSI_RED+"\nNombre Invalide! Veuillez réessayer!"+ANSI_RESET);
+                                    System.out.println(ANSI_RED+"\nNombre invalide ! Veuillez réessayer!"+ANSI_RESET);
                                 }
                             }else{
                                 System.out.println(ANSI_RED+"\nCeci n'est pas un nombre! Veuillez réessayer!"+ANSI_RESET);
                             }
                         }
-
-
-
                     } else if (choixmenu == 2) {//si l'utilisateur souhaite voir le top 10
                         Top10.lecturedeFile();
                         Top10.comparaisonDeScoreEtTri();
@@ -116,7 +111,7 @@ public class Main {
                     } else if (choixmenu == 3) {//si il souhaite quitter
                         System.exit(0);
                     }else{
-                        System.out.println(ANSI_RED+"\nNombre Invalide! Veuillez réessayer!"+ANSI_RESET);//message d'erreur
+                        System.out.println(ANSI_RED+"\nNombre invalide ! Veuillez réessayer!"+ANSI_RESET);//message d'erreur
                     }
                 }else{
                     System.out.println(ANSI_RED+"\nCeci n'est pas un nombre! Veuillez réessayer!"+ANSI_RESET);//message d'erreur
@@ -133,6 +128,8 @@ public class Main {
                 int restartAnswer = restartScan.nextInt();
                 if(restartAnswer == 1){
                     System.out.println("\n");
+                    grid.clearTable();
+                    grid.setPlay(true);
                     restart = true;
                 }else{
                     restart = false;
