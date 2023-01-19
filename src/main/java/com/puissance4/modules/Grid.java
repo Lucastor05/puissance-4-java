@@ -12,6 +12,7 @@ import java.lang.String;
 
 
 public class Grid {
+    //initialization of variables
     private int Players;
     private String[][] Table = new String[6][7];
     private boolean Play = true;
@@ -48,11 +49,13 @@ public class Grid {
         System.out.println("\u001B[34m"+"└───┴───┴───┴───┴───┴───┴───┘"+ANSI_RESET);
     }
 
+    //take a random number between a minimum and a maximum
     public int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
     }
 
+    //check if the other player will win the next turn
     public boolean checkDiagonal(int mostRight, int mostLeft, int j, int i, int holej, int holei) {
         if (mostRight < j) {
             return false;
@@ -79,6 +82,7 @@ public class Grid {
         return false;
     }
 
+    //block the next diagonal right win strike
     public boolean blockDiagonalRight(int i, int j, int mostLeft, int mostRight, boolean shouldIplay, String sign, int max) {
         int diagonalRight = 0;
         int tempj = j;
@@ -148,6 +152,7 @@ public class Grid {
         return false;
     }
 
+    //block the next diagonal left win strike
     public boolean blockDiagonalLeft(int i, int j, int mostLeft, int mostRight, boolean shouldIplay, String sign, int max) {
         int diagonalLeft = 0;
         int tempj = j;
@@ -218,6 +223,7 @@ public class Grid {
         return false;
     }
 
+    //block the next row win strike
     public boolean blockRow(int i, int j, int mostLeft, int mostRight, boolean shouldIplay, String sign, int max) {
         int tempj = j;
         int rowCount = 0;
@@ -277,14 +283,27 @@ public class Grid {
             } else {
                 if (i < 5) {
                     if (hole > 0 && Table[i+1][hole] != null) {
+                        System.out.println("block row hole");
                         handleFall(hole);
                         return true;
                     }
                     if (mostLeft > 0 && Table[i][mostLeft - 1] == null && Table[i + 1][mostLeft - 1] != null) {
+                        System.out.println("block row left");
                         handleFall(mostLeft - 1);
+                        if (mostRight < 6 && Table[i][mostRight + 1] == null && Table[i + 1][mostRight + 1] != null && max >= 3) {
+                            if (!mustPlay.contains(mostRight+1)) {
+                                mustPlay.add(mostRight+1);
+                            }
+                        }
                         return true;
                     } else if (mostRight < 6 && Table[i][mostRight + 1] == null && Table[i + 1][mostRight + 1] != null) {
+                        System.out.println("block row right");
                         handleFall(mostRight + 1);
+                        if (mostLeft > 0 && Table[i][mostLeft - 1] == null && Table[i + 1][mostLeft - 1] != null && max >= 3) {
+                            if (!mustPlay.contains(mostLeft-1)) {
+                                mustPlay.add(mostLeft-1);
+                            }
+                        }
                         return true;
                     }
                 } else {
@@ -294,9 +313,19 @@ public class Grid {
                     }
                     if (mostLeft > 0 && Table[i][mostLeft - 1] == null) {
                         handleFall(mostLeft - 1);
+                        if (mostRight < 6 && Table[i][mostRight + 1] == null&& max >= 3) {
+                            if (!mustPlay.contains(mostRight+1)) {
+                                mustPlay.add(mostRight+1);
+                            }
+                        }
                         return true;
-                    } else if (mostRight < 6 && Table[i][mostRight + 1] == null) {
+                    } else if (mostRight < 6 && Table[i][mostRight + 1] == null&& max >= 3) {
                         handleFall(mostRight + 1);
+                        if (mostLeft > 0 && Table[i][mostLeft - 1] == null) {
+                            if (!mustPlay.contains(mostLeft-1)) {
+                                mustPlay.add(mostLeft-1);
+                            }
+                        }
                         return true;
                     }
                 }
@@ -305,9 +334,24 @@ public class Grid {
         return false;
     }
 
+    //check if it's useful to play diagonal left for the ia
+    public boolean usefulDiagonalLeft(int IaI, int IaJ) {
+        System.out.println("can play diag left 2 : "+blockDiagonalLeft(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2));
+        if (IaJ > 0 && IaI > 0 && IaI < 5 && Table[IaI-1][IaJ-1] == null && Table[IaI+1][IaJ-1] != null && blockDiagonalRight(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2)) {
+            System.out.println("handle fall : "+(IaJ-1));
+            if (Table[IaI][IaJ-1] == null) {
+                mustPlay.add(IaJ-1);
+            }
+            handleFall(IaJ-1);
+            return true;
+        }
+        return false;
+    }
+
+    //check if it's useful to play diagonal right for the ia
     public boolean usefulDiagonalRight(int IaI, int IaJ) {
         System.out.println("can play diag right 2 : "+blockDiagonalRight(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2));
-        if (IaJ < 6 && IaI > 0 && IaI < 5 && Table[IaI-1][IaJ+1] == null && Table[IaI+1][IaJ+1] != null) {
+        if (IaJ < 6 && IaI > 0 && IaI < 5 && Table[IaI-1][IaJ+1] == null && Table[IaI+1][IaJ+1] != null && blockDiagonalRight(IaI, IaJ, IaI, IaJ, false, player2.caractere, 2)) {
             System.out.println("handle fall : "+(IaJ+1));
             if (Table[IaI][IaJ+1] == null) {
                 mustPlay.add(IaJ+1);
@@ -318,6 +362,7 @@ public class Grid {
         return false;
     }
 
+    //check if it's useful to play column left for the ia
     public boolean canWinHereColumn(int j){
         int compteur = 0;
         for(int i = 0; i <6; i++){
@@ -333,6 +378,7 @@ public class Grid {
 
     }
 
+    //check if it's useful to play row for the ia
     public boolean usefulRow(int IaI, int IaJ) {
         if (Table[IaI][3] != null && !Table[IaI][3].equals(player1.caractere)) {
             if (IaJ < 3) {
@@ -364,7 +410,9 @@ public class Grid {
         return false;
     }
 
+    //ia lvl2 turn
     public void iaLvl2 () {
+        System.out.println("lvl2");
         int columnCount = 1;
 
         int i = lasti;
@@ -382,10 +430,10 @@ public class Grid {
         if (returnRow) return;
         if (i>0) {
             if (j>0) {
-                returnRow = blockRow(i,j,mostLeft,mostRight, true, sign, 3);
+                returnRow = blockRow(i-1,j-1,mostLeft,mostRight, true, sign, 3);
                 if (returnRow) return;
             } else if (j<6) {
-                returnRow = blockRow(i,j,mostLeft,mostRight, true, sign, 3);
+                returnRow = blockRow(i-1,j+1,mostLeft,mostRight, true, sign, 3);
                 if (returnRow) return;
             }
         }
@@ -413,9 +461,75 @@ public class Grid {
             if (returnDiagonal) return;
         }
 
-        iaLvl4AlignThree();
+        if (player2.difficulty == 4) iaLvl4AlignThree();
+        else randomPlace();
     }
 
+    public void iaLvl4AlignTwo () {
+        int columnCount = 1;
+        System.out.println("lvl4 align two");
+
+        //IA variables
+        int IaI = lastIaI;
+        int IaJ = lastIaJ;
+        int tempIaI = IaI;
+        int tempIaJ = IaJ;
+        int mostLeftIA = tempIaJ;
+        int mostRightIA = tempIaJ;
+
+        //players variables
+        int i = lasti;
+        int j = lastj;
+        int tempj = j;
+
+        String signIa = player2.caractere;
+
+        //IA WIN
+        //Horizontal
+        boolean returnRow = blockRow(IaI,IaJ,mostLeftIA,mostRightIA, true, signIa, 1);
+        if (returnRow) return;
+        if (IaI>0) {
+            if (IaJ>0) {
+                returnRow = blockRow(IaI-1,IaJ-1,mostLeftIA,mostRightIA, true, signIa, 1);
+                if (returnRow) return;
+            } else if (IaJ<6) {
+                returnRow = blockRow(IaI-1,IaJ+1,mostLeftIA,mostRightIA, true, signIa, 1);
+                if (returnRow) return;
+            }
+        }
+
+        //Vertical
+        while (tempIaI < 5 && Objects.equals(Table[tempIaI + 1][IaJ], signIa)) {
+            columnCount += 1;
+            tempIaI += 1;
+        }
+        if (columnCount==3) {
+            if (canWinHereColumn(IaJ)) {
+                handleFall(IaJ);
+                return;
+            }
+        }
+
+
+        //Diagonal Droite
+        boolean returnDiagonal = blockDiagonalRight(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 1);
+        if (returnDiagonal) return;
+        returnDiagonal = blockDiagonalRight(IaI,IaJ-1,mostLeftIA,mostRightIA,true, signIa, 1);
+        if (returnDiagonal) return;
+
+
+        //Diagonal Gauche
+        returnDiagonal = blockDiagonalLeft(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 1);
+        if (returnDiagonal) return;
+        if (IaJ<6) {
+            returnDiagonal = blockDiagonalLeft(IaI, IaJ+1, mostLeftIA, mostRightIA,true, signIa, 1);
+            if (returnDiagonal) return;
+        }
+
+        randomPlace();
+    }
+
+    //ia try to align 3 shots when lvl4
     public void iaLvl4AlignThree() {
         int columnCount = 1;
 
@@ -463,28 +577,29 @@ public class Grid {
             }
         }
 
-
         //Diagonal Droite
         boolean returnDiagonal;
         if (usefulDiagonalRight(IaI, IaJ)) {
-            return;/*
-            returnDiagonal = blockDiagonalRight(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 2);
-            if (returnDiagonal) return;
-            returnDiagonal = blockDiagonalRight(IaI,IaJ-1,mostLeftIA,mostRightIA,true, signIa, 2);
-            if (returnDiagonal) return;*/
+            return;
         }
+        returnDiagonal = blockDiagonalRight(IaI,IaJ-1,mostLeftIA,mostRightIA,true, signIa, 2);
+        if (returnDiagonal) return;
+
 
         //Diagonal Gauche
-        returnDiagonal = blockDiagonalLeft(IaI,IaJ,mostLeftIA,mostRightIA,true, signIa, 2);
-        if (returnDiagonal) return;
+        if (usefulDiagonalLeft(IaI, IaJ)) {
+            return;
+        }
         if (IaJ<6) {
             returnDiagonal = blockDiagonalLeft(IaI, IaJ+1, mostLeftIA, mostRightIA,true, signIa, 2);
             if (returnDiagonal) return;
         }
 
-        randomPlace();
+        iaLvl4AlignTwo();
     }
 
+    //ia lvl3 program
+    //spot the squares where it can't plays without make the player win
     public void iaLvl3() {
         System.out.println("lvl3");
         for (int j = 0; j<Table[0].length; j++) {
@@ -519,9 +634,13 @@ public class Grid {
                 }
             }
         }
+
         iaLvl2();
     }
 
+    //ia lvl4 program
+    //place the fourth square if there is a 3 length alignement
+    //call iaLvl4AlignThree neither
     public void iaLvl4 () {
         int columnCount = 1;
         System.out.println("lvl4");
@@ -538,8 +657,6 @@ public class Grid {
         int i = lasti;
         int j = lastj;
         int tempj = j;
-
-
 
         String signIa = player2.caractere;
 
@@ -563,8 +680,10 @@ public class Grid {
             tempIaI += 1;
         }
         if (columnCount==3) {
-            handleFall(IaJ);
-            return;
+            if (canWinHereColumn(IaJ)) {
+                handleFall(IaJ);
+                return;
+            }
         }
 
 
@@ -586,6 +705,7 @@ public class Grid {
         iaLvl3();
     }
 
+    //end game conditions
     public void winCondition (int i, int j) {
         lastIaI = lasti;
         lastIaJ = lastj;
@@ -689,6 +809,7 @@ public class Grid {
         changePlayer();
     }
 
+    //switch players
     public void changePlayer() {
         if (actualPlayer.equals(player1)) {
             actualPlayer = player2;
@@ -697,6 +818,7 @@ public class Grid {
         }
     }
 
+    //remove i from array when someone plays on a forbidden square
     public void removeForbiddenCase(int i) {
         if (forbiddenCases.contains(i)) {
             int index = forbiddenCases.indexOf(i);
@@ -704,25 +826,27 @@ public class Grid {
         }
     }
 
-    public int removeMustPlayCase(int i) {
-        if (mustPlay.contains(0)) {
-            int index = mustPlay.indexOf(0);
-            return mustPlay.remove(index);
+    //remove i from array when someone plays on a "must play" square
+    public void removeMustPlayCase(int i) {
+        if (mustPlay.contains(i)) {
+            int index = mustPlay.indexOf(i);
+            mustPlay.remove(index);
         }
-        return -1;
     }
 
+    //handle the caractere fall
     public void handleFall (int i) {
         String sign = actualPlayer.caractere;
         boolean fallen = false;
         int length = 0;
         Scanner sc = new Scanner(System.in);
         removeForbiddenCase(i);
-        int returnMustPlay = removeMustPlayCase(i);
-        if (actualPlayer.equals(player2) && mustPlay.size() > 0) {
-            if (returnMustPlay > 0) i = returnMustPlay;
-        }
         System.out.println("must play : "+mustPlay);
+        if (actualPlayer.equals(player2) && mustPlay.size() > 0) {
+            System.out.println("i replaced");
+            i = mustPlay.get(0);
+        }
+        removeMustPlayCase(i);
         if (mustPlay.size() > 0) System.out.println("play : "+i);
         while (!fallen) {
             if (player1.caractere.equals(Table[0][i]) || player2.caractere.equals(Table[0][i])) {
@@ -730,6 +854,7 @@ public class Grid {
                 System.out.println("Entré une nouvelle colonne : ");
                 i = sc.nextInt()-1;
             } else {
+                System.out.println("fallin : "+i);
                 if (length == Table.length-1 || player1.caractere.equals(Table[length + 1][i]) || player2.caractere.equals(Table[length + 1][i])) {
                     Table[length][i] = sign;
                     Round += 1;
@@ -742,6 +867,7 @@ public class Grid {
         winCondition(length, i);
     }
 
+    //place the square at a random place
     public void randomPlace () {
         int i = 0;
         for (int j = 0; j<Table[0].length; j++) {

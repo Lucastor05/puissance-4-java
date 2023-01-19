@@ -6,6 +6,7 @@ public class Player {
     protected String pseudo;
     protected String caractere;
     protected String couleur;
+    protected int difficulty;
 
     public Player(String pseudo, String caractere, String couleur) {
         //constructor
