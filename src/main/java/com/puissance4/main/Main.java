@@ -19,18 +19,8 @@ public class Main {
         if(choixmenu.equals(1)) {
             grid.play();
         } else if (choixmenu.equals(2)) {
-            File logDir = new File("puissance-4-java");
-            File[] files = logDir.listFiles();
-            for (File file : files) {
-                if (file.isFile() && file.getName().equals("File.txt")) {
-                    //1Top10.affichageTopTen();
-                    // Le fichier de log a été trouvé, vous pouvez faire quelque chose avec
-                    break;
-                }
-                else {
-                    System.out.println("il ny a pas encore de tableau des scores");
-                }
-            }
+            Top10.lecturedeFile();
+            Top10.comparaisonDeScoreEtTri();
         } else if (choixmenu.equals(3)) {
             System.exit(0);
         }

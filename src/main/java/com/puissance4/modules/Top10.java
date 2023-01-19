@@ -1,74 +1,69 @@
 package com.puissance4.modules;
-
-import java.io.*;
-import java.util.Objects;
-import java.util.Scanner;
-
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.util.Collections;
+import java.util.List;
+import java.lang.*;
+
 
 public class Top10 {
-    ArrayList<Integer> top10 = new ArrayList<>();
-    public static void createfiletxt(){
-        ArrayList<Integer> top10 = new ArrayList<>();
+    //static List<Integer>[] matrice;
+    public static void createfiletxt(String name, Integer score) {
         try {
-            File myObj = new File("File.txt");
-            if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
+            writeFileContents(name, score);
+
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
-
-    }
-    /*static ArrayList<Integer> top10 = new ArrayList<>();
-    static File logFile = new File("top10.txt");
-
-    public static void createTopTen(){
-        ArrayList<Integer> top10 = new ArrayList<>();
-        File logFile = new File("top10.txt");
-    }
-
-    public static void updateTopTen(Integer ScorePlayeur){
-        // Ajouter ou modifier les entrées du top 10
-        Scanner input = new Scanner(System.in);
-        for (int i = 0; i < 10; i++) {
-            if (ScorePlayeur<top10[i]){
-
-                if (i < top10.size()) {
-                    top10.set(i, ScorePlayeur);
-                } else {
-                    top10.add(ScorePlayeur);
-                }
-            }
         }
     }
-
-    public static void saveTopTen(Integer ScorePlayeur){
-        // Enregistrer le top 10 mis à jour dans le fichier de journal
-        try (PrintWriter logWriter = new PrintWriter(logFile)) {
-            for ( ScorePlayeur : top10) {
-                logWriter.println(ScorePlayeur);
+    public static void writeFileContents(String name, Integer score) throws IOException {
+        try (FileWriter fileWriter = new FileWriter("File.txt", true)) {
+            fileWriter.write(name+" "+score+"\n");
+            fileWriter.close();
+            lecturedeFile();
+        }
+    }
+    public static void lecturedeFile() {
+        try {
+            File file = new File("File.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                //System.out.println(line);
+            }
+            scanner.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void comparaisonDeScoreEtTri() {
+        List<StringIntegerPair> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("File.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" ");
+                String string = parts[0];
+                int integer = Integer.parseInt(parts[1]);
+                list.add(new StringIntegerPair(string, integer));
             }
         } catch (IOException e) {
-            System.out.println("Une erreur est survenue lors de l'enregistrement du fichier de journal.");
+            e.printStackTrace();
+        }
+
+        Collections.sort(list);
+        List<StringIntegerPair> top10 = list;
+        Collections.reverse(top10);
+        for (StringIntegerPair pair : top10) {
+            System.out.println(pair.getString() + " " + pair.getInteger());
         }
     }
+}
 
 
-    public static void affichageTopTen() {
-        for (int i = 0; i < top10.size() ; i++) { //une boucle avec i qui a pour valeur la taille du tableau, se qui equivaut au ligne
-            // Charger le top 10 existant à partir du fichier de journal
-            try (Scanner logScanner = new Scanner(logFile)) {
-                while (logScanner.hasNextLine()) {
-                    System.out.println(top10.add(logScanner.nextInt()));
-                }
-            } catch (FileNotFoundException e) {
-                System.out.println("Aucun fichier de journal n'a été trouvé, un nouveau fichier sera créé.");
-            }
-        }
-    }*/
-}}
+

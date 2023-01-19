@@ -131,14 +131,17 @@ public class Grid {
             if(actualPlayer.equals(player1)){
                 String Winnerplayer=actualPlayer.pseudo;
                 Integer Score= Round/2;
-                Top10.createfiletxt();
+                Top10.createfiletxt(Winnerplayer,Score);
                 System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
+                System.out.println("voici notre tableau des meilleurs scores. Tu es dessus tu pense? on regarde!");
+                Top10.comparaisonDeScoreEtTri();
             } else if (actualPlayer.equals(player2)) {
                 String Winnerplayer=actualPlayer.pseudo;
                 Integer Score= (Round/2)+1;
-                Top10.createfiletxt();
-                System.out.println("2");
+                Top10.createfiletxt(Winnerplayer,Score);
                 System.out.println(ANSI_GREEN+"Score de "+Score+" Round"+ANSI_RESET);
+                System.out.println("voici notre tableau des meilleurs scores. Tu es dessus tu pense? on regarde!");
+                Top10.comparaisonDeScoreEtTri();
             }
             Play = false;
         }
