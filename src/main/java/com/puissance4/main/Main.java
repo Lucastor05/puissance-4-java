@@ -25,59 +25,65 @@ public class Main {
 
 
             while (!choixvalide){
+                //1er menu
                 System.out.println("\nMenu:");
                 System.out.println("Pour jouer tapé "+ANSI_GREEN+"1"+ANSI_RESET);
                 System.out.println("Pour voir le Top 10 des meilleurs parties de Puissance 4 tapé "+ANSI_GREEN+"2"+ANSI_RESET);
                 System.out.println("Pour quitter le jeu tapé "+ANSI_RED+"3"+ANSI_RESET);
                 System.out.println("Que souhaitez vous faire?");
                 Scanner menu = new Scanner(System.in);
-                if (menu.hasNextInt()) {
+
+                if (menu.hasNextInt()) {//si la reponse est un nombre entier
                     int choixmenu = menu.nextInt();
-                    if (choixmenu == 1) {
+                    if (choixmenu == 1) {//si le joueur descide de vouloir lancer une partie
                         boolean choixNbJoueurValide = false;
 
-                        while(!choixNbJoueurValide) {
+                        while(!choixNbJoueurValide) {//tant que la reponse donne au prochain menu n'est pas valide
+                            //2eme menu
                             System.out.println("\nMenu de parti:");
                             System.out.println("Pour jouer contre une IA tapé "+ANSI_GREEN+"1"+ANSI_RESET);
                             System.out.println("Pour jouer contre un autre joueur tapé "+ANSI_GREEN+"2"+ANSI_RESET);
                             System.out.println("Pour quitter le jeu tapé "+ANSI_RED+"3"+ANSI_RESET);
                             System.out.println("Que souhaitez vous faire?");
                             Scanner menuparti = new Scanner(System.in);
-                            if (menuparti.hasNextInt()) {
+                            if (menuparti.hasNextInt()) {//si la reponse est un nombre entier
                                 int choixmenuparti = menuparti.nextInt();
-                                if (choixmenuparti == 1 || choixmenuparti == 2) {
-                                    Integer numberOfPlayers = choixmenuparti;
+                                if (choixmenuparti == 1 || choixmenuparti == 2) {//si le joueur descide de ne pas quitter
+                                    int numberOfPlayers = choixmenuparti;
                                     Scanner sc = new Scanner(System.in);
-                                    Player player1 = new Player("Player_1", "X", "");
-                                    player1.Playerspersonnalisation("hhghgh");
-                                    grid.setPlayer1(player1);
-                                    grid.setActualPlayer(player1);
+                                    Player player1 = new Player("Player_1", "X", "");//creation de l'objet joueur1
+                                    player1.Playerspersonnalisation("hhghgh");//demande au joueur 1 si il veut personnaliser sont personnage
+                                    grid.setPlayer1(player1);//initialise le joueur 1 comme joueur dans le plateau
+                                    grid.setActualPlayer(player1);//met la variable joueur actuel a joueur 1
 
 
-                                    if (numberOfPlayers == 2) {
-                                        Player player2 = new Player("joueur2", "O", "");
-                                        player2.Playerspersonnalisation(player1.getCaractere());
-                                        grid.setPlayer2(player2);
-                                    } else {
-                                        Ia bot = new Ia("BOT", "O", "", 4);
-                                        bot.iaspersonnalisation();
-                                        bot.getDifficulty();
-                                        grid.setPlayer2(bot);
+                                    if (numberOfPlayers == 2) { //si le joueur descide de vouloir lancer une partie contre un autre joueur (humain)
+
+                                        Player player2 = new Player("joueur2", "O", "");//creation de l'objet joueur2
+                                        player2.Playerspersonnalisation(player1.getCaractere());//demande au joueur 2 si il veut personnaliser sont personnage
+                                        grid.setPlayer2(player2);//initialise le joueur 2 comme joueur dans le plateau
+
+                                    } else {//si le joueur descide de vouloir lancer une partie contre une ia
+
+                                        Ia bot = new Ia("BOT", "O", "", 4);//cree un objet ia
+                                        bot.iaspersonnalisation();//demande a l'utilisateur de choisir la difficulté
+                                        bot.getDifficulty();//recupere la difficulté choisi
+                                        grid.setPlayer2(bot);//initialise l'ia comme joueur dans le plateau
+
                                     }
 
 
-                                    System.out.println(player1.getCaractere());
-
                                     //lancement jeu avec parametre precedent
                                     grid.setPlayers(numberOfPlayers);
-                                    while (grid.isPlay()) {
-                                        if (numberOfPlayers == 2 || grid.getRound() % 2 != 0) {
-                                            grid.printGrid();
+                                    while (grid.isPlay()) {//si le jeu est en cour
+                                        if (numberOfPlayers == 2 || grid.getRound() % 2 != 0) {//si le nombre de joueur est 2 ou que c'est au tour du joueur 1
+                                            grid.printGrid();//affiche la grille
                                             System.out.println("Choisissez la colonne sur laquelle vous voulez jouer :");
                                             int i = sc.nextInt();
-                                            grid.handleFall(i - 1);
-                                        } else {
+                                            grid.handleFall(i - 1);//place le pions et check si le joueur a gagner
+                                        } else {//si c'est au tour de l'ia
                                             Ia player2 = (Ia) grid.getPlayer2();
+                                            //faire jouez differente fonction de l'ia celon la difficulté choisi
                                             if (player2.getDifficulty() == 1) {
                                                 grid.randomPlace();
                                             } else if (player2.getDifficulty() == 2) {
@@ -103,26 +109,26 @@ public class Main {
 
 
 
-                    } else if (choixmenu == 2) {
+                    } else if (choixmenu == 2) {//si l'utilisateur souhaite voir le top 10
                         File logDir = new File("puissance-4-java");
                         File[] files = logDir.listFiles();
                         for (File file : files) {
-                            if (file.isFile() && file.getName().equals("File.txt")) {
-                                //1Top10.affichageTopTen();
+                            if (file.isFile() && file.getName().equals("File.txt")) {//si  le nom du fichier est File.txt
+                                //Top10.affichageTopTen(); //on l'affiche
                                 // Le fichier de log a été trouvé, vous pouvez faire quelque chose avec
                                 break;
                             } else {
-                                System.out.println("il ny a pas encore de tableau des scores");
+                                System.out.println(ANSI_RED+"il ny a pas encore de tableau des scores"+ANSI_RESET);
                             }
                         }
                         choixvalide = true;
-                    } else if (choixmenu == 3) {
+                    } else if (choixmenu == 3) {//si il souhaite quitter
                         System.exit(0);
                     }else{
-                        System.out.println(ANSI_RED+"\nNombre Invalide! Veuillez réessayer!"+ANSI_RESET);
+                        System.out.println(ANSI_RED+"\nNombre Invalide! Veuillez réessayer!"+ANSI_RESET);//message d'erreur
                     }
                 }else{
-                    System.out.println(ANSI_RED+"\nCeci n'est pas un nombre! Veuillez réessayer!"+ANSI_RESET);
+                    System.out.println(ANSI_RED+"\nCeci n'est pas un nombre! Veuillez réessayer!"+ANSI_RESET);//message d'erreur
                 }
             }
 
