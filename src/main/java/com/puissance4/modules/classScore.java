@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+    //on définit une class comme pour les player ou on met deux élément une string pour le pseudo et un integer pour le score
     class StringIntegerPair implements Comparable<StringIntegerPair> {
         private String string;
         private int integer;
@@ -24,7 +24,7 @@ import java.util.List;
             return string;
         }
 
-        @Override
+        //juste en dessous ca me permet de comparer deux élement pour saoir qui est supérieur ou inférieur (j'utilise le integer de la class pour comparé)
         public int compareTo(StringIntegerPair o) {
             if(this.integer > o.integer) {
                 return -1;

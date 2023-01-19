@@ -1,7 +1,1 @@
 joueur1 4
-joueur1 7
-joueur1 4
-joueur1 4
-joueur1 5
-joueur1 4
-joueur1 4
