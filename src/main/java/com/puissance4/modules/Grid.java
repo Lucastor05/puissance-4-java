@@ -37,11 +37,27 @@ public class Grid {
                 if (Objects.equals(Table[i][j], player1.caractere) || Objects.equals(Table[i][j], player2.caractere)) {
                     sign = Table[i][j];
                 }
-                if(j==0){
-                    System.out.print("\u001B[34m"+"│ "+ANSI_RESET+sign +"\u001B[34m"+" │"+ANSI_RESET);
-                }else {
-                    System.out.print(" "+sign +"\u001B[34m"+" │"+ANSI_RESET);
+
+                if(player1.caractere.equals(Table[i][j])){
+                    if(j==0){
+                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player1.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                    }else {
+                        System.out.print(" "+player1.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                    }
+                }else if(player2.caractere.equals(Table[i][j])){
+                    if(j==0){
+                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+player2.couleur+sign+ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                    }else {
+                        System.out.print(" "+player2.couleur+sign +ANSI_RESET+"\u001B[34m"+" │"+ANSI_RESET);
+                    }
+                }else{
+                    if(j==0){
+                        System.out.print("\u001B[34m"+"│ "+ANSI_RESET+sign +"\u001B[34m"+" │"+ANSI_RESET);
+                    }else {
+                        System.out.print(" "+sign +"\u001B[34m"+" │"+ANSI_RESET);
+                    }
                 }
+
             }
             System.out.print("\n");
         }

@@ -11,35 +11,37 @@ import com.puissance4.modules.Top10;
 public class Main {
     public static void main(String[] args) {
         Grid grid = new Grid();
-        String ANSI_RESET = "\u001B[0m";
-        String ANSI_RED = "\u001B[31m";
+        String ANSI_GREEN = "\u001B[32m";//permet de changer la couleur du texte dans la console en vert
+        String ANSI_BLUE = "\u001B[34m";//permet de changer la couleur du texte dans la console en bleu
+        String ANSI_RED = "\u001B[31m"; //permet de changer la couleur du texte dans la console en rouge
+        String ANSI_RESET = "\u001B[0m";//reset la couleur
+
 
         boolean restart = true;
         while(restart) {
 
             boolean choixvalide = false;
-            System.out.println("Menu:");
-            System.out.println("Pour jouer tapé 1");
-            System.out.println("Pour voir le Top 10 des meilleurs parties de Puissance 4 tapé 2");
-            System.out.println("Pour quitter le jeu tapé 3");
-            System.out.println("Que souhaitez vous faire?");
+
 
 
             while (!choixvalide){
+                System.out.println("\nMenu:");
+                System.out.println("Pour jouer tapé "+ANSI_GREEN+"1"+ANSI_RESET);
+                System.out.println("Pour voir le Top 10 des meilleurs parties de Puissance 4 tapé "+ANSI_GREEN+"2"+ANSI_RESET);
+                System.out.println("Pour quitter le jeu tapé "+ANSI_RED+"3"+ANSI_RESET);
+                System.out.println("Que souhaitez vous faire?");
                 Scanner menu = new Scanner(System.in);
                 if (menu.hasNextInt()) {
                     int choixmenu = menu.nextInt();
-
                     if (choixmenu == 1) {
                         boolean choixNbJoueurValide = false;
 
-                        System.out.println("Menu de parti:");
-                        System.out.println("Pour jouer contre une IA tapé 1");
-                        System.out.println("Pour jouer contre un autre joueur tapé 2");
-                        System.out.println("Pour quitter le jeu tapé 3");
-                        System.out.println("Que souhaitez vous faire?");
-
                         while(!choixNbJoueurValide) {
+                            System.out.println("\nMenu de parti:");
+                            System.out.println("Pour jouer contre une IA tapé "+ANSI_GREEN+"1"+ANSI_RESET);
+                            System.out.println("Pour jouer contre un autre joueur tapé "+ANSI_GREEN+"2"+ANSI_RESET);
+                            System.out.println("Pour quitter le jeu tapé "+ANSI_RED+"3"+ANSI_RESET);
+                            System.out.println("Que souhaitez vous faire?");
                             Scanner menuparti = new Scanner(System.in);
                             if (menuparti.hasNextInt()) {
                                 int choixmenuparti = menuparti.nextInt();
@@ -47,22 +49,24 @@ public class Main {
                                     Integer numberOfPlayers = choixmenuparti;
                                     Scanner sc = new Scanner(System.in);
                                     Player player1 = new Player("Player_1", "X", "");
-                                    player1.Playerspersonnalisation();
+                                    player1.Playerspersonnalisation("hhghgh");
                                     grid.setPlayer1(player1);
                                     grid.setActualPlayer(player1);
 
 
                                     if (numberOfPlayers == 2) {
                                         Player player2 = new Player("joueur2", "O", "");
-                                        player2.Playerspersonnalisation();
+                                        player2.Playerspersonnalisation(player1.getCaractere());
                                         grid.setPlayer2(player2);
                                     } else {
-                                        Ia bot = new Ia("BOT", "0", "", 4);
+                                        Ia bot = new Ia("BOT", "O", "", 4);
                                         bot.iaspersonnalisation();
                                         bot.getDifficulty();
                                         grid.setPlayer2(bot);
                                     }
 
+
+                                    System.out.println(player1.getCaractere());
 
                                     //lancement jeu avec parametre precedent
                                     grid.setPlayers(numberOfPlayers);
@@ -126,7 +130,7 @@ public class Main {
 
 
             //demander de restart le jeu
-            System.out.println("Voulez-vous relancer la partie ? \n1) Oui \t2) Non");
+            System.out.println("Voulez-vous relancer la partie ? \n"+ANSI_GREEN+"1) Oui "+ANSI_RESET+"\t"+ANSI_RED+"2) Non"+ANSI_RESET);
             Scanner restartScan = new Scanner(System.in);
             if(restartScan.hasNextInt()){
                 int restartAnswer = restartScan.nextInt();

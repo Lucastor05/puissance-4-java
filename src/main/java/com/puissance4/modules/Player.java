@@ -1,9 +1,15 @@
 package com.puissance4.modules;
 
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Player {
     protected String pseudo;
+
+    public String getCaractere() {
+        return caractere;
+    }
+
     protected String caractere;
     protected String couleur;
 
@@ -13,26 +19,32 @@ public class Player {
         this.caractere = caractere;
         this.couleur = couleur;
     }
-    public void Playerspersonnalisation(){
-        String caractereOfPlayers = "X";
+    public void Playerspersonnalisation(String CaraJoueur1){
+        /*
+        Fonction qui permet à l'utilisateur d'avoir la possibilité de personnaliser sont personnage.
+        modifie le pseudo, le symbole et le caractere du personnage si voulu.
+         */
+
+        //Initialisaton des variables
         String couleurOfPlayers;
         boolean valide = false;
-        String ANSI_RESET = "\u001B[0m";
-        String ANSI_RED = "\u001B[31m";
+        String ANSI_GREEN = "\u001B[32m";//permet de changer la couleur du texte dans la console en vert
+        String ANSI_BLUE = "\u001B[34m";//permet de changer la couleur du texte dans la console en bleu
+        String ANSI_RED = "\u001B[31m"; //permet de changer la couleur du texte dans la console en rouge
+        String ANSI_PURPLE = "\u001B[35m"; //permet de changer la couleur du texte dans la console en rouge
+        String ANSI_YELLOW = "\u001B[33m"; //permet de changer la couleur du texte dans la console en rouge
+        String ANSI_RESET = "\u001B[0m"; //reset la couleur
 
-
-        System.out.println("Voulez vous personnaliser les pseudo? \n1-Oui\n2-Non");
-
-
-
+        //personnalisation des pseudos
         while(!valide){
+            System.out.println("\nVoulez vous personnaliser les pseudo? \n"+ANSI_GREEN+"1) Oui "+ANSI_RESET+"\t"+ANSI_RED+"2) Non"+ANSI_RESET);
             Scanner choixpseudo = new Scanner(System.in);
 
             if(choixpseudo.hasNextInt()) {
                 int choixpseudoplayers = choixpseudo.nextInt();
                 if (choixpseudoplayers == 1) {
                     Scanner p1 = new Scanner(System.in);
-                    System.out.println("Pseudo du joueur " + pseudo + " :");
+                    System.out.println("\nQuel est votre nom ?");
                     this.pseudo = p1.nextLine();
                 }
                 valide = true;
@@ -41,12 +53,10 @@ public class Player {
             }
         }
 
-
+        //personnalisation des symboles
         valide =  false;
-
-        System.out.println("\n\nVoulez vous personnaliser vos symboles ? \n1-Oui\n2-Non");
-
         while(!valide){
+            System.out.println("\nVoulez vous personnaliser vos symboles ? \n"+ANSI_GREEN+"1) Oui "+ANSI_RESET+"\t"+ANSI_RED+"2) Non"+ANSI_RESET);
             Scanner scan = new Scanner(System.in);
             if(scan.hasNextInt()){
                 int choixsymboleplayer = scan.nextInt();
@@ -54,15 +64,27 @@ public class Player {
                     boolean caraBon = false;
 
                     while(!caraBon){
-                        Scanner c1 = new Scanner(System.in);
-                        System.out.println("Joueur  : Quel symbole voulez-vous ?");
-                        this.caractere = c1.nextLine();
 
-                        if(caractereOfPlayers.equals(".") || caractereOfPlayers.length() != 1){
-                            System.out.println("\nSymbole non valide! Veuillez réessayer !");
-                            caraBon = false;
+                        System.out.println("\n"+this.pseudo + "  : Quel symbole voulez-vous ?");
+                        Scanner c1 = new Scanner(System.in);
+
+
+                        if(!c1.hasNextInt()) {
+                            String cara1 = c1.next();
+                            if (cara1.equals("-") || cara1.length() != 1) {
+                                System.out.println(ANSI_RED + "\nSymbole non valide! Veuillez réessayer !" + ANSI_RESET);
+                                caraBon = false;
+                            } else {
+                                if (cara1 == CaraJoueur1) {
+                                    caraBon = false;
+                                } else {
+                                    this.caractere = cara1;
+                                    caraBon = true;
+                                }
+
+                            }
                         }else{
-                            caraBon = true;
+                            System.out.println(ANSI_RED + "\nLe symbole ne peut pas être un nombre! Veuillez réessayer!" + ANSI_RESET);
                         }
 
                     }
@@ -74,14 +96,10 @@ public class Player {
 
         }
 
-
-        System.out.println("\n\nVoulez vous personnaliser la couleur de vos symboles ? \n1-Oui\n2-Non");
-
-
-
+        //personnalisation des couleurs
         valide = false;
-
         while(!valide){
+            System.out.println("\nVoulez vous personnaliser la couleur de vos symboles ? \n"+ANSI_GREEN+"1) Oui "+ANSI_RESET+"\t"+ANSI_RED+"2) Non"+ANSI_RESET);
             Scanner scancouleur = new Scanner(System.in);
             if(scancouleur.hasNextInt()) {
                 int choixcouleurplayer = scancouleur.nextInt();
@@ -89,7 +107,7 @@ public class Player {
                     boolean caracouleur = false;
                     while (!caracouleur) {
                         Scanner C1 = new Scanner(System.in);
-                        System.out.println("Couleur du joueur :\nVous pouvez choisir parmis les couleurs suivantes : [Bleu, Jaune, Violet et Rouge]");
+                        System.out.println("\nQuelle couleur souhaitez vous utiliser ?\nVous pouvez choisir parmis les couleurs suivantes : ["+ANSI_BLUE+"Bleu"+ANSI_RESET+", "+ANSI_YELLOW+"Jaune"+ANSI_RESET+", "+ANSI_PURPLE+"Violet"+ANSI_RESET+" et "+ANSI_RED+"Rouge"+ANSI_RESET+"]");
 
                         couleurOfPlayers = C1.nextLine();
 
