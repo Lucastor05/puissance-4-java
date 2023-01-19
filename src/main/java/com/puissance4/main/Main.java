@@ -110,17 +110,8 @@ public class Main {
 
 
                     } else if (choixmenu == 2) {//si l'utilisateur souhaite voir le top 10
-                        File logDir = new File("puissance-4-java");
-                        File[] files = logDir.listFiles();
-                        for (File file : files) {
-                            if (file.isFile() && file.getName().equals("File.txt")) {//si  le nom du fichier est File.txt
-                                //Top10.affichageTopTen(); //on l'affiche
-                                // Le fichier de log a été trouvé, vous pouvez faire quelque chose avec
-                                break;
-                            } else {
-                                System.out.println(ANSI_RED+"il ny a pas encore de tableau des scores"+ANSI_RESET);
-                            }
-                        }
+                        Top10.lecturedeFile();
+                        Top10.comparaisonDeScoreEtTri();
                         choixvalide = true;
                     } else if (choixmenu == 3) {//si il souhaite quitter
                         System.exit(0);
@@ -150,6 +141,5 @@ public class Main {
                 restart = false;
             }
         }
-
     }
 }

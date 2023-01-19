@@ -1,74 +1,71 @@
 package com.puissance4.modules;
-
-import java.io.*;
-import java.util.Objects;
-import java.util.Scanner;
-
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.util.Collections;
+import java.util.List;
+import java.lang.*;
+
 
 public class Top10 {
-    ArrayList<Integer> top10 = new ArrayList<>();
-    public static void createfiletxt(){
-        ArrayList<Integer> top10 = new ArrayList<>();
+    //createfiletxt appel writeFileContents en gérant des erreurs avec IOException et prend les parametres utile comme le score et le pseudo
+    public static void createfiletxt(String name, Integer score) {
         try {
-            File myObj = new File("File.txt");
-            if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
+            writeFileContents(name, score);
+
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+
             e.printStackTrace();
-
-    }
-    /*static ArrayList<Integer> top10 = new ArrayList<>();
-    static File logFile = new File("top10.txt");
-
-    public static void createTopTen(){
-        ArrayList<Integer> top10 = new ArrayList<>();
-        File logFile = new File("top10.txt");
-    }
-
-    public static void updateTopTen(Integer ScorePlayeur){
-        // Ajouter ou modifier les entrées du top 10
-        Scanner input = new Scanner(System.in);
-        for (int i = 0; i < 10; i++) {
-            if (ScorePlayeur<top10[i]){
-
-                if (i < top10.size()) {
-                    top10.set(i, ScorePlayeur);
-                } else {
-                    top10.add(ScorePlayeur);
-                }
-            }
         }
     }
-
-    public static void saveTopTen(Integer ScorePlayeur){
-        // Enregistrer le top 10 mis à jour dans le fichier de journal
-        try (PrintWriter logWriter = new PrintWriter(logFile)) {
-            for ( ScorePlayeur : top10) {
-                logWriter.println(ScorePlayeur);
+    //writeFile Contents attribue la chaine de caractere qu'on va ecrire dans File.txt
+    public static void writeFileContents(String name, Integer score) throws IOException {
+        try (FileWriter fileWriter = new FileWriter("File.txt", true)) {
+            fileWriter.write(name+" "+score+"\n");
+            fileWriter.close();
+            lecturedeFile();
+        }
+    }
+    //lecturedeFile permet d'avoir le top10 d'afficher
+    public static void lecturedeFile() {
+        try {
+            File file = new File("File.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+            }
+            scanner.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //comparaisonDeScoreEtTri permet de comparet les score existant dans le fichier .txt de les séparer en deux colonnes  avec la class StringIntegerPair et de les afficher par ordre croissant (du meilleur joueur avec le meilleur score au pire joueur avec le pire score
+    public static void comparaisonDeScoreEtTri() {
+        List<StringIntegerPair> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("File.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {//continue temp qu'il y a des ligne a lire
+                String[] parts = line.split(" ");//split pour recuperer joueur et score separer par des points
+                String string = parts[0];//les joeueur
+                int integer = Integer.parseInt(parts[1]);//les scores
+                list.add(new StringIntegerPair(string, integer));//ajouts a la liste temporaire des données recuperer
             }
         } catch (IOException e) {
-            System.out.println("Une erreur est survenue lors de l'enregistrement du fichier de journal.");
+            e.printStackTrace();
+        }
+
+        Collections.sort(list);//on tri la liste par ordre croissant
+        List<StringIntegerPair> top10 = list;//on fait une condition du nombre d'element du top10
+        Collections.reverse(top10);//on les inverse pour avoir les plus petit score en premier car les plus petis scores sont les meilleurs dans ce jeu
+        for (StringIntegerPair pair : top10) {
+            System.out.println(pair.getString() + " " + pair.getInteger());//on affiche le top 10
         }
     }
+}
 
 
-    public static void affichageTopTen() {
-        for (int i = 0; i < top10.size() ; i++) { //une boucle avec i qui a pour valeur la taille du tableau, se qui equivaut au ligne
-            // Charger le top 10 existant à partir du fichier de journal
-            try (Scanner logScanner = new Scanner(logFile)) {
-                while (logScanner.hasNextLine()) {
-                    System.out.println(top10.add(logScanner.nextInt()));
-                }
-            } catch (FileNotFoundException e) {
-                System.out.println("Aucun fichier de journal n'a été trouvé, un nouveau fichier sera créé.");
-            }
-        }
-    }*/
-}}
+
