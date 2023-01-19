@@ -19,7 +19,7 @@ public class Main {
 
         boolean restart = true;
         while(restart) {
-
+            grid = new Grid();
             boolean choixvalide = false;
 
 
@@ -71,6 +71,8 @@ public class Main {
                                         grid.setPlayer2(bot);//initialise l'ia comme joueur dans le plateau
 
                                     }
+
+                                    grid.setPlay(true);
                                     //lancement jeu avec parametre precedent
                                     grid.setPlayers(numberOfPlayers);
                                     while (grid.isPlay()) {//si le jeu est en cour
@@ -104,6 +106,9 @@ public class Main {
                                 System.out.println(ANSI_RED+"\nCeci n'est pas un nombre! Veuillez réessayer!"+ANSI_RESET);
                             }
                         }
+
+
+
                     } else if (choixmenu == 2) {//si l'utilisateur souhaite voir le top 10
                         Top10.lecturedeFile();
                         Top10.comparaisonDeScoreEtTri();
