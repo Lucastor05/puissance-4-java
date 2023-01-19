@@ -825,7 +825,7 @@ public class Grid {
         tempi = i;
         tempj = j;
         while (tempi < 5 && tempj > 0 && Objects.equals(Table[tempi + 1][tempj - 1], sign)) {
-            this.listWinningPons.addCoordinate(tempi-1 ,tempj-1);
+            this.listWinningPons.addCoordinate(tempi+1 ,tempj-1);
             diagonalRight += 1;
             tempi += 1;
             tempj -= 1;
