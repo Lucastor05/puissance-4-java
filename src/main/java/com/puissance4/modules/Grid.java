@@ -71,6 +71,10 @@ public class Grid {
     }
 
     public int getRandomNumberUsingNextInt(int min, int max) {
+        /*
+         * Fontion qui renvoie un nombre aleatoire compris entre le minimum et le maximum entré en parametre
+         * return un nombre entien aleatoire
+         */
         Random random = new Random();
         return random.nextInt(max - min) + min;
     }
